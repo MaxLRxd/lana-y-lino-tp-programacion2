@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lana &amp; Lino — Catálogo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/products.css">
+</head>
+<body>
+
+  <input type="checkbox" id="dark-mode" class="dark-mode-toggle">
+
+  <div class="page-wrapper">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-inner">
+
+        <div class="header-left">
+          <nav class="dropdown">
+            <button class="dropdown-trigger">
+              Productos
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="dropdown-menu">
+              <a href="index.html">Todos los productos</a>
+              <hr class="dropdown-divider">
+              <a href="index.html?categoria=remeras">Remeras</a>
+              <a href="index.html?categoria=buzos">Buzos</a>
+              <a href="index.html?categoria=camperas">Camperas</a>
+              <a href="index.html?categoria=bermudas">Bermudas</a>
+              <a href="index.html?categoria=pantalones">Pantalones</a>
+              <a href="index.html?categoria=calzado">Calzado</a>
+            </div>
+          </nav>
+
+          <div class="header-search">
+            <input type="text" placeholder="Buscar productos...">
+            <button type="button" aria-label="Buscar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="header-logo">
+          <a href="index.html">Lana &amp; Lino</a>
+        </div>
+
+        <div class="header-actions">
+          <a href="favorites.html" class="icon-btn" title="Favoritos">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </a>
+
+          <!-- When logged out, show login button. When logged in, show logout. JS toggles. -->
+          <a href="login.html" class="btn-session">Iniciar sesión</a>
+
+          <a href="cart.html" class="icon-btn" title="Carrito">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="badge">2</span>
+          </a>
+
+          <a href="profile.html" class="icon-btn" title="Mi cuenta">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </a>
+
+          <label for="dark-mode" class="dark-toggle-label" title="Cambiar tema">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </label>
+        </div>
+
+      </div>
+    </header>
+
+    <main class="main">
+
+      <div class="page-header">
+        <div class="page-header-inner">
+          <h1>Catálogo</h1>
+          <p>Explorá nuestra colección completa</p>
+        </div>
+      </div>
+
+      <div class="products-layout">
+
+        <!-- FILTERS -->
+        <aside class="filters-sidebar">
+          <p class="filters-title">Filtros</p>
+
+          <div class="filter-group">
+            <span class="filter-group-label">Género</span>
+            <div class="filter-options">
+              <label class="filter-option">
+                <input type="checkbox" name="genero" value="mujer">
+                <span>Mujer</span>
+                <span class="filter-count">48</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="genero" value="hombre">
+                <span>Hombre</span>
+                <span class="filter-count">42</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="genero" value="unisex">
+                <span>Unisex</span>
+                <span class="filter-count">16</span>
+              </label>
+            </div>
+          </div>
+
+          <hr class="divider">
+
+          <div class="filter-group">
+            <span class="filter-group-label">Categoría</span>
+            <div class="filter-options">
+              <label class="filter-option">
+                <input type="checkbox" name="categoria" value="remeras">
+                <span>Remeras</span>
+                <span class="filter-count">20</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="categoria" value="buzos">
+                <span>Buzos</span>
+                <span class="filter-count">14</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="categoria" value="camperas">
+                <span>Camperas</span>
+                <span class="filter-count">12</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="categoria" value="bermudas">
+                <span>Bermudas</span>
+                <span class="filter-count">10</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="categoria" value="pantalones">
+                <span>Pantalones</span>
+                <span class="filter-count">16</span>
+              </label>
+              <label class="filter-option">
+                <input type="checkbox" name="categoria" value="calzado">
+                <span>Calzado</span>
+                <span class="filter-count">18</span>
+              </label>
+            </div>
+          </div>
+
+          <hr class="divider">
+
+          <div class="filter-group">
+            <span class="filter-group-label">Color</span>
+            <div class="color-options">
+              <div class="color-swatch-wrapper">
+                <input type="checkbox" name="color" value="negro" id="cl-negro">
+                <label for="cl-negro" class="color-swatch swatch-negro" title="Negro"></label>
+              </div>
+              <div class="color-swatch-wrapper">
+                <input type="checkbox" name="color" value="blanco" id="cl-blanco">
+                <label for="cl-blanco" class="color-swatch swatch-blanco" title="Blanco"></label>
+              </div>
+              <div class="color-swatch-wrapper">
+                <input type="checkbox" name="color" value="azul" id="cl-azul">
+                <label for="cl-azul" class="color-swatch swatch-azul" title="Azul"></label>
+              </div>
+              <div class="color-swatch-wrapper">
+                <input type="checkbox" name="color" value="rojo" id="cl-rojo">
+                <label for="cl-rojo" class="color-swatch swatch-rojo" title="Rojo"></label>
+              </div>
+              <div class="color-swatch-wrapper">
+                <input type="checkbox" name="color" value="verde" id="cl-verde">
+                <label for="cl-verde" class="color-swatch swatch-verde" title="Verde"></label>
+              </div>
+              <div class="color-swatch-wrapper">
+                <input type="checkbox" name="color" value="beige" id="cl-beige">
+                <label for="cl-beige" class="color-swatch swatch-beige" title="Beige"></label>
+              </div>
+              <div class="color-swatch-wrapper">
+                <input type="checkbox" name="color" value="gris" id="cl-gris">
+                <label for="cl-gris" class="color-swatch swatch-gris" title="Gris"></label>
+              </div>
+              <div class="color-swatch-wrapper">
+                <input type="checkbox" name="color" value="marron" id="cl-marron">
+                <label for="cl-marron" class="color-swatch swatch-marron" title="Marrón"></label>
+              </div>
+            </div>
+          </div>
+
+          <hr class="divider">
+
+          <button class="btn btn-ghost btn-full btn-sm" type="button">Limpiar filtros</button>
+        </aside>
+
+        <!-- PRODUCTS -->
+        <section>
+          <div class="products-toolbar">
+            <p class="products-count">Mostrando <strong>106</strong> productos</p>
+            <select class="sort-select" aria-label="Ordenar por">
+              <option value="">Ordenar por</option>
+              <option value="precio-asc">Precio: menor a mayor</option>
+              <option value="precio-desc">Precio: mayor a menor</option>
+              <option value="nuevo">Más nuevos</option>
+            </select>
+          </div>
+
+          <div class="product-grid">
+
+            <article class="product-card">
+              <a href="product.html">
+                <div class="product-card-image">
+                  <img src="assets/images/remera-clasica.jpg" alt="Remera Clásica Algodón">
+                  <span class="product-card-badge">Nuevo</span>
+                  <button class="product-card-wishlist" type="button" title="Guardar en favoritos">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </a>
+              <div class="product-card-body">
+                <p class="product-card-category">Remeras · Mujer</p>
+                <a href="product.html"><h3 class="product-card-name">Remera Clásica Algodón</h3></a>
+                <p class="product-card-price">$8.900</p>
+              </div>
+              <div class="product-card-footer">
+                <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
+              </div>
+            </article>
+
+            <article class="product-card">
+              <a href="product.html">
+                <div class="product-card-image">
+                  <img src="assets/images/buzo-oversize.jpg" alt="Buzo Oversize Frisa">
+                  <button class="product-card-wishlist" type="button" title="Guardar en favoritos">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </a>
+              <div class="product-card-body">
+                <p class="product-card-category">Buzos · Unisex</p>
+                <a href="product.html"><h3 class="product-card-name">Buzo Oversize Frisa Interior</h3></a>
+                <p class="product-card-price">$14.500</p>
+              </div>
+              <div class="product-card-footer">
+                <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
+              </div>
+            </article>
+
+            <article class="product-card">
+              <a href="product.html">
+                <div class="product-card-image">
+                  <img src="assets/images/campera-jean.jpg" alt="Campera Jean Desgastada">
+                  <span class="product-card-badge out-of-stock">Sin stock</span>
+                </div>
+              </a>
+              <div class="product-card-body">
+                <p class="product-card-category">Camperas · Hombre</p>
+                <a href="product.html"><h3 class="product-card-name">Campera Jean Desgastada</h3></a>
+                <p class="product-card-price">$22.000</p>
+              </div>
+              <div class="product-card-footer">
+                <button class="btn btn-ghost btn-sm btn-full" disabled>Sin stock</button>
+              </div>
+            </article>
+
+            <article class="product-card">
+              <a href="product.html">
+                <div class="product-card-image">
+                  <img src="assets/images/pantalon-cargo.jpg" alt="Pantalón Cargo Gabardina">
+                  <button class="product-card-wishlist" type="button" title="Guardar en favoritos">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </a>
+              <div class="product-card-body">
+                <p class="product-card-category">Pantalones · Unisex</p>
+                <a href="product.html"><h3 class="product-card-name">Pantalón Cargo Gabardina</h3></a>
+                <p class="product-card-price">$18.500</p>
+              </div>
+              <div class="product-card-footer">
+                <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
+              </div>
+            </article>
+
+            <article class="product-card">
+              <a href="product.html">
+                <div class="product-card-image">
+                  <img src="assets/images/bermuda-lino.jpg" alt="Bermuda de Lino Premium">
+                  <button class="product-card-wishlist" type="button" title="Guardar en favoritos">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </a>
+              <div class="product-card-body">
+                <p class="product-card-category">Bermudas · Hombre</p>
+                <a href="product.html"><h3 class="product-card-name">Bermuda de Lino Premium</h3></a>
+                <p class="product-card-price">$11.200</p>
+              </div>
+              <div class="product-card-footer">
+                <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
+              </div>
+            </article>
+
+            <article class="product-card">
+              <a href="product.html">
+                <div class="product-card-image">
+                  <img src="assets/images/zapatillas-urban.jpg" alt="Zapatillas Urban Classic">
+                  <button class="product-card-wishlist" type="button" title="Guardar en favoritos">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </a>
+              <div class="product-card-body">
+                <p class="product-card-category">Calzado · Unisex</p>
+                <a href="product.html"><h3 class="product-card-name">Zapatillas Urban Classic</h3></a>
+                <p class="product-card-price">$31.500</p>
+              </div>
+              <div class="product-card-footer">
+                <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>Lana &amp; Lino</h3>
+          <p>Indumentaria de calidad para quienes valoran el estilo y la comodidad. Envíos a todo el país.</p>
+          <div class="footer-social">
+            <a href="#" title="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <circle cx="12" cy="12" r="4"></circle>
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
+              </svg>
+            </a>
+            <a href="#" title="Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+            </a>
+            <a href="#" title="WhatsApp">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navegación</h4>
+          <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="index.html">Catálogo</a></li>
+            <li><a href="favorites.html">Favoritos</a></li>
+            <li><a href="cart.html">Carrito</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Categorías</h4>
+          <ul>
+            <li><a href="#">Remeras</a></li>
+            <li><a href="#">Buzos</a></li>
+            <li><a href="#">Camperas</a></li>
+            <li><a href="#">Pantalones</a></li>
+            <li><a href="#">Calzado</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contacto</h4>
+          <ul>
+            <li><span class="footer-contact-item">✉ info@lanaylino.com</span></li>
+            <li><span class="footer-contact-item">📞 +54 11 1234-5678</span></li>
+            <li><span class="footer-contact-item">💬 +54 9 11 1234-5678</span></li>
+            <li><span class="footer-contact-item">📍 Buenos Aires, Argentina</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2025 Lana &amp; Lino. Todos los derechos reservados.</p>
+        <p>Desarrollado por Grupo 7 — Trabajo Práctico 1</p>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
