@@ -1,0 +1,587 @@
+/* ============================
+   PRODUCTS LAYOUT
+   ============================ */
+.products-layout {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--sp-lg);
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: var(--sp-xl);
+  align-items: start;
+}
+
+/* ============================
+   FILTERS SIDEBAR
+   ============================ */
+.filters-sidebar {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-lg);
+  position: sticky;
+  top: calc(var(--header-height) + 24px);
+  transition: background-color var(--transition), border-color var(--transition);
+}
+
+.filters-title {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--sp-lg);
+}
+
+.filter-group {
+  margin-bottom: var(--sp-lg);
+}
+
+.filter-group-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--sp-sm);
+  display: block;
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  cursor: pointer;
+  padding: 6px 4px;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition);
+}
+
+.filter-option:hover {
+  background-color: var(--color-surface-2);
+}
+
+.filter-option input {
+  accent-color: var(--color-accent);
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.filter-option span {
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.filter-count {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* Color swatches */
+.color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-sm);
+}
+
+.color-swatch-wrapper {
+  position: relative;
+}
+
+.color-swatch-wrapper input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.color-swatch {
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  border: 2.5px solid transparent;
+  cursor: pointer;
+  transition: transform var(--transition), border-color var(--transition);
+  outline-offset: 2px;
+}
+
+.color-swatch-wrapper input:checked + .color-swatch {
+  border-color: var(--color-accent);
+  transform: scale(1.18);
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+}
+
+/* ============================
+   PRODUCTS TOOLBAR
+   ============================ */
+.products-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--sp-lg);
+}
+
+.products-count {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.products-count strong {
+  color: var(--color-text);
+}
+
+.sort-select {
+  padding: 8px 32px 8px 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23777' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.sort-select:focus {
+  border-color: var(--color-accent);
+}
+
+/* ============================
+   PRODUCT GRID
+   ============================ */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-lg);
+}
+
+/* ============================
+   PRODUCT CARD
+   ============================ */
+.product-card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  transition: box-shadow var(--transition), transform var(--transition),
+              background-color var(--transition), border-color var(--transition);
+}
+
+.product-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.product-card-image {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: var(--color-surface-2);
+}
+
+.product-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.product-card:hover .product-card-image img {
+  transform: scale(1.05);
+}
+
+.product-card-badge {
+  position: absolute;
+  top: var(--sp-sm);
+  left: var(--sp-sm);
+  background-color: var(--color-accent);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.product-card-badge.out-of-stock {
+  background-color: var(--color-text-muted);
+}
+
+.product-card-wishlist {
+  position: absolute;
+  top: var(--sp-sm);
+  right: var(--sp-sm);
+  width: 34px;
+  height: 34px;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity var(--transition), transform var(--transition),
+              background-color var(--transition);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text);
+}
+
+.product-card:hover .product-card-wishlist {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.product-card-wishlist:hover {
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+.product-card-body {
+  padding: var(--sp-md);
+}
+
+.product-card-category {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+
+.product-card-name {
+  font-family: var(--font-serif);
+  font-size: 0.975rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-card-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.product-card-footer {
+  padding: 0 var(--sp-md) var(--sp-md);
+}
+
+/* ============================
+   PRODUCT DETAIL PAGE
+   ============================ */
+.product-detail-layout {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--sp-lg) var(--sp-xl);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-xl);
+  align-items: start;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--sp-md) var(--sp-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.breadcrumb a {
+  color: var(--color-text-muted);
+  transition: color var(--transition);
+}
+
+.breadcrumb a:hover {
+  color: var(--color-accent);
+}
+
+.breadcrumb-sep {
+  font-size: 0.7rem;
+}
+
+/* Gallery */
+.product-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+  position: sticky;
+  top: calc(var(--header-height) + 24px);
+}
+
+.product-gallery-main {
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--color-surface-2);
+}
+
+.product-gallery-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-gallery-thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-sm);
+}
+
+.product-gallery-thumb {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.product-gallery-thumb.active,
+.product-gallery-thumb:hover {
+  border-color: var(--color-accent);
+}
+
+.product-gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Product info */
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-lg);
+}
+
+.product-info-category {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--color-text-muted);
+}
+
+.product-info-name {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.product-info-price {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.product-info-description {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.75;
+}
+
+/* Stock indicator */
+.stock-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.stock-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.stock-dot.in-stock  { background-color: #2ecc71; }
+.stock-dot.low-stock { background-color: var(--color-warning); }
+.stock-dot.no-stock  { background-color: var(--color-error); }
+
+/* Size selector */
+.selector-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  display: block;
+  margin-bottom: var(--sp-sm);
+}
+
+.size-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-sm);
+}
+
+.size-option {
+  position: relative;
+}
+
+.size-option input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.size-option label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  color: var(--color-text);
+}
+
+.size-option input:checked + label {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.size-option label:hover {
+  border-color: var(--color-accent);
+}
+
+.size-option.unavailable label {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  pointer-events: none;
+}
+
+/* Out of stock banner */
+.out-of-stock-banner {
+  background-color: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--sp-md);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ============================
+   INSTALLMENTS — CSS-only trick
+   Uses radio siblings + ~ selector
+   ============================ */
+.cuotas-box {
+  background-color: var(--color-surface-2);
+  border-radius: var(--radius-md);
+  padding: var(--sp-md);
+  transition: background-color var(--transition);
+}
+
+/* All 5 radio inputs must be direct children of .cuotas-box */
+.cuota-radio {
+  display: none;
+}
+
+.cuotas-header {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--sp-sm);
+}
+
+.cuotas-buttons {
+  display: flex;
+  gap: var(--sp-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-md);
+}
+
+.cuotas-buttons label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.cuotas-buttons label:hover {
+  border-color: var(--color-accent);
+}
+
+/* Active label styles via checked sibling */
+#c1:checked  ~ .cuotas-buttons label[for="c1"],
+#c3:checked  ~ .cuotas-buttons label[for="c3"],
+#c6:checked  ~ .cuotas-buttons label[for="c6"],
+#c9:checked  ~ .cuotas-buttons label[for="c9"],
+#c12:checked ~ .cuotas-buttons label[for="c12"] {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+/* Price display — all hidden by default */
+.cuota-price {
+  display: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.cuota-price span {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+#c1:checked  ~ .cuotas-prices .cp-1,
+#c3:checked  ~ .cuotas-prices .cp-3,
+#c6:checked  ~ .cuotas-prices .cp-6,
+#c9:checked  ~ .cuotas-prices .cp-9,
+#c12:checked ~ .cuotas-prices .cp-12 {
+  display: block;
+}
+
+/* Default: show 1 cuota on load */
+.cp-1 { display: block; }
