@@ -1,0 +1,404 @@
+/* ============================
+   CUSTOM PROPERTIES
+   ============================ */
+:root {
+  --color-bg:           #fafaf8;
+  --color-surface:      #ffffff;
+  --color-surface-2:    #f0efeb;
+  --color-border:       #e8e6e0;
+  --color-text:         #111111;
+  --color-text-muted:   #777777;
+  --color-accent:       #8b4513;
+  --color-accent-hover: #7a3c10;
+  --color-accent-light: #f5ede6;
+  --color-success:      #2d6a4f;
+  --color-error:        #c0392b;
+  --color-warning:      #e67e22;
+
+  --font-sans:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif:  'Playfair Display', Georgia, serif;
+
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-full: 9999px;
+
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.10);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.14);
+
+  --header-height: 70px;
+  --max-width:     1280px;
+  --transition:    0.2s ease;
+
+  --sp-xs: 4px;
+  --sp-sm: 8px;
+  --sp-md: 16px;
+  --sp-lg: 24px;
+  --sp-xl: 48px;
+}
+
+/* ============================
+   DARK MODE — checkbox hack
+   ============================ */
+.dark-mode-toggle {
+  display: none;
+}
+
+.dark-mode-toggle:checked ~ .page-wrapper {
+  --color-bg:           #0f0f0f;
+  --color-surface:      #1a1a1a;
+  --color-surface-2:    #242424;
+  --color-border:       #2e2e2e;
+  --color-text:         #f0efeb;
+  --color-text-muted:   #999999;
+  --color-accent:       #c4855a;
+  --color-accent-hover: #d4956a;
+  --color-accent-light: #2a1a10;
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.55);
+}
+
+/* ============================
+   RESET
+   ============================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* ============================
+   PAGE WRAPPER
+   ============================ */
+.page-wrapper {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--header-height);
+  transition: background-color var(--transition), color var(--transition);
+}
+
+/* ============================
+   TYPOGRAPHY
+   ============================ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+
+/* ============================
+   CONTAINER
+   ============================ */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--sp-lg);
+}
+
+/* ============================
+   MAIN
+   ============================ */
+.main {
+  flex: 1;
+  padding: var(--sp-xl) 0;
+}
+
+/* ============================
+   BUTTONS
+   ============================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-sm);
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all var(--transition);
+  white-space: nowrap;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: #ffffff;
+  border-color: var(--color-accent);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.btn-outline:hover {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.btn-ghost:hover {
+  border-color: var(--color-text);
+}
+
+.btn-danger {
+  background-color: var(--color-error);
+  color: #ffffff;
+  border-color: var(--color-error);
+}
+
+.btn-danger:hover {
+  opacity: 0.85;
+}
+
+.btn-sm  { padding: 6px 14px;   font-size: 0.8rem; }
+.btn-lg  { padding: 14px 28px;  font-size: 1rem;   }
+.btn-full { width: 100%; }
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ============================
+   ICON BUTTON
+   ============================ */
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition);
+  position: relative;
+  color: var(--color-text);
+}
+
+.icon-btn:hover {
+  background-color: var(--color-surface-2);
+}
+
+/* ============================
+   BADGE
+   ============================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-accent);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  width: 17px;
+  height: 17px;
+  border-radius: var(--radius-full);
+  position: absolute;
+  top: -3px;
+  right: -3px;
+}
+
+/* ============================
+   FORM ELEMENTS
+   ============================ */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xs);
+}
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  padding: 10px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color var(--transition);
+  outline: none;
+  width: 100%;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--color-accent);
+}
+
+.form-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23777' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* ============================
+   DIVIDER
+   ============================ */
+.divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--sp-lg) 0;
+}
+
+/* ============================
+   ALERT
+   ============================ */
+.alert {
+  padding: var(--sp-md);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: var(--color-success);
+  border: 1px solid #b8dfc7;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: var(--color-error);
+  border: 1px solid #f5c6cb;
+}
+
+/* ============================
+   EMPTY STATE
+   ============================ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-xl);
+  text-align: center;
+  gap: var(--sp-md);
+  color: var(--color-text-muted);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  opacity: 0.45;
+}
+
+/* ============================
+   PAGE HEADER BAND
+   ============================ */
+.page-header {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--sp-lg) 0;
+  margin-bottom: var(--sp-xl);
+}
+
+.page-header-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--sp-lg);
+}
+
+.page-header h1 {
+  font-size: 1.85rem;
+  margin-bottom: 4px;
+}
+
+.page-header p {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* ============================
+   COLOR SWATCHES (filter)
+   ============================ */
+.swatch-negro   { background-color: #1a1a1a; }
+.swatch-blanco  { background-color: #f5f5f0; border: 1.5px solid #ccc !important; }
+.swatch-azul    { background-color: #2c5f8a; }
+.swatch-rojo    { background-color: #c0392b; }
+.swatch-verde   { background-color: #2d6a4f; }
+.swatch-beige   { background-color: #d4b896; }
+.swatch-gris    { background-color: #888888; }
+.swatch-marron  { background-color: #7b4a2d; }
+.swatch-rosa    { background-color: #e8a4b0; }
+.swatch-amarillo { background-color: #e6c84a; }
