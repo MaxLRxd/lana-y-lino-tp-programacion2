@@ -2,8 +2,8 @@
 
 ## 👥 Equipo de Desarrollo
 
-> Canello Manuel
-> Rojas Máximo
+- Canello Manuel -> ManuCanello
+- Rojas Máximo -> MaxLRxd
 
 ---
 
