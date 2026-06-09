@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadProfile() {
   const user = Api.getUser();
   try {
-    const data = await Api.get(`/api/obtenerDatosUsuario/${user.id}`);
+    const res  = await Api.get(`/api/obtenerDatosUsuario/${user.id}`);
+    const data = res.payload?.[0] || {};
     fillForm(data);
     Api.setUser({ ...user, ...data });
   } catch {

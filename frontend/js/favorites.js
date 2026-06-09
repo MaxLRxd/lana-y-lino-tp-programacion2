@@ -15,19 +15,29 @@ async function loadFavorites() {
 
   try {
     // 1. Obtener IDs de favoritos
-    const favs = await Api.get(`/api/obtenerFavoritos/${user.id}`);
+    const res = await Api.get(`/api/obtenerFavoritos/${user.id}`);
+    const favs = res.payload || [];
 
-    if (!favs || !favs.length) {
+    if (!favs.length) {
       renderEmpty(grid);
       return;
     }
 
     // 2. Traer datos de cada producto en paralelo
-    const products = (await Promise.allSettled(
-      favs.map(f => Api.get(`/api/obtenerDatosProducto?id=${f.id_producto}`, false))
-    )).filter(r => r.status === 'fulfilled').map(r => r.value);
+    const results = (await Promise.allSettled(
+      favs.map(f => Api.get(`/api/obtenerDatosProducto/${f.id_producto}`, false))
+    )).filter(r => r.status === 'fulfilled').map(r => {
+      const data = r.value.payload?.[0];
+      return data ? {
+        id:         data.idProducto,
+        nombre:     data.producto,
+        precio:     data.precio,
+        imagen:     data.ulrImagen,
+        categoria:  data.categoria,
+      } : null;
+    }).filter(Boolean);
 
-    renderFavorites(products);
+    renderFavorites(results);
   } catch {
     grid.innerHTML = `<div class="alert alert-error">Error al cargar favoritos.</div>`;
   }

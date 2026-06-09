@@ -14,8 +14,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadPaymentItems() {
   const user = Api.getUser();
   try {
-    const items = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
-    renderOrderSummary(items || []);
+    const res = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
+    const items = (res.payload || []).map(i => ({
+      nombre:  i.producto,
+      precio:  i.precio,
+      imagen:  i.urlImagen,
+      talle:   i.talle,
+      color:   i.color,
+    }));
+    renderOrderSummary(items);
   } catch {
     showToast('Error al cargar el pedido', 'error');
   }
