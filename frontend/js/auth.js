@@ -21,11 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       setLoading(form, true, 'Iniciando sesión...');
       try {
-        const res = await Api.post('/api/login', { usuario, password }, false);
+        const res = await Api.post('/api/login', { email: usuario, password }, false);
 
-        // El backend devuelve el token y datos del usuario
-        Api.setToken(res.token);
-        Api.setUser(res.usuario ?? res.user ?? { email: usuario, rol: res.rol ?? 'usuario' });
+        const userData = res.payload?.[0] ?? { email: usuario, rol: 'usuario' };
+        Api.setToken(res.jwt);
+        Api.setUser({ ...userData, id: userData.id_usuario });
 
         window.location.href = 'index.html';
       } catch (err) {

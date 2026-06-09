@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ── Carga del producto ───────────────────────────────────────
 async function loadProduct(id) {
   try {
-    const product = await Api.get(`/api/obtenerDatosProducto?id=${id}`, false);
+    const product = await Api.get(`/api/obtenerDatosProducto/${id}`, false);
     renderProduct(product);
   } catch {
     document.querySelector('.product-detail-layout').innerHTML =

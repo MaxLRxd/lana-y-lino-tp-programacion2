@@ -95,7 +95,7 @@ function updateHeaderSession() {
 // ── Cargar categorías en el menú desplegable ────────────────
 async function loadDropdownCategories() {
   try {
-    const cats = await Api.get('/api/obtenerCategorias', false);
+    const cats = await Api.get('/api/obtenerCategorias');
     if (!cats || !Array.isArray(cats)) return;
 
     document.querySelectorAll('.dropdown-menu').forEach(menu => {
