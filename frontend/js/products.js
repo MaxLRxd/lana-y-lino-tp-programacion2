@@ -16,12 +16,49 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadProducts() {
   try {
     const res = await Api.get('/api/obtenerProductos', false);
-    allProducts = res.payload || [];
+    allProducts = res.payload || res || [];
+    updateFilterCounts(allProducts);
     applyFilters();
   } catch {
     document.querySelector('.product-grid').innerHTML =
       `<div class="alert alert-error" style="grid-column:1/-1;">Error al cargar productos</div>`;
   }
+}
+
+// ── Actualizar contadores de filtros desde la BD ─────────────
+function updateFilterCounts(products) {
+  const generoCount   = {};
+  const categoriaCount = {};
+  const colorCount    = {};
+
+  products.forEach(p => {
+    const gen = (p.genero    || '').toLowerCase().trim();
+    const cat = (p.categoria || '').toLowerCase().trim();
+    const col = (p.color     || '').toLowerCase().trim();
+
+    if (gen) generoCount[gen]    = (generoCount[gen]    || 0) + 1;
+    if (cat) categoriaCount[cat] = (categoriaCount[cat] || 0) + 1;
+    if (col) colorCount[col]     = (colorCount[col]     || 0) + 1;
+  });
+
+  // Género
+  document.querySelectorAll('input[name="genero"]').forEach(input => {
+    const countEl = input.closest('.filter-option')?.querySelector('.filter-count');
+    if (countEl) countEl.textContent = generoCount[input.value.toLowerCase()] || 0;
+  });
+
+  // Categoría
+  document.querySelectorAll('input[name="categoria"]').forEach(input => {
+    const countEl = input.closest('.filter-option')?.querySelector('.filter-count');
+    if (countEl) countEl.textContent = categoriaCount[input.value.toLowerCase()] || 0;
+  });
+
+  // Color — los swatches no tienen filter-count en el HTML original,
+  // pero si se agrega uno al wrapper lo actualiza igual
+  document.querySelectorAll('input[name="color"]').forEach(input => {
+    const countEl = input.closest('.color-swatch-wrapper')?.querySelector('.filter-count');
+    if (countEl) countEl.textContent = colorCount[input.value.toLowerCase()] || 0;
+  });
 }
 
 // ── Filtrado y render ────────────────────────────────────────
@@ -32,6 +69,7 @@ function applyFilters() {
   const urlCat = new URLSearchParams(window.location.search).get('categoria');
   if (urlCat) {
     filtered = filtered.filter(p =>
+      String(p.id_categoria) === urlCat ||
       p.categoria?.toLowerCase() === urlCat.toLowerCase()
     );
   }
@@ -62,7 +100,6 @@ function applyFilters() {
 
   renderProducts(filtered);
   updateCount(filtered.length);
-  updateSortVisibility(filtered.length !== allProducts.length);
 }
 
 function getChecked(selector) {
@@ -74,19 +111,25 @@ function renderProducts(products) {
   if (!grid) return;
 
   if (!products.length) {
-    grid.innerHTML = `<div class="alert alert-info" style="grid-column:1/-1;">No se encontraron productos</div>`;
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+      <span class="empty-state-icon">🔍</span>
+      <p>No se encontraron productos</p>
+    </div>`;
     return;
   }
 
   grid.innerHTML = products.map(p => {
     const hasStock = p.stock !== 0;
+    const imagen   = p.ulrImagen || p.imagen || 'assets/images/placeholder.jpg';
+    const nombre   = p.producto  || p.nombre || '';
+    const id       = p.idProducto || p.id_producto || p.id;
     return `
       <article class="product-card">
-        <a href="product.html?id=${p.idProducto}">
+        <a href="product.html?id=${id}">
           <div class="product-card-image">
-            <img src="${p.ulrImagen || 'assets/images/placeholder.jpg'}" alt="${p.producto}">
+            <img src="${imagen}" alt="${nombre}">
             ${!hasStock ? '<span class="product-card-badge out-of-stock">Sin stock</span>' : ''}
-            <button class="product-card-wishlist" type="button" title="Guardar en favoritos" data-id="${p.idProducto}">
+            <button class="product-card-wishlist" type="button" title="Guardar en favoritos" data-id="${id}">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
               </svg>
@@ -95,12 +138,12 @@ function renderProducts(products) {
         </a>
         <div class="product-card-body">
           <p class="product-card-category">${[p.categoria, p.genero].filter(Boolean).join(' · ')}</p>
-          <a href="product.html?id=${p.idProducto}"><h3 class="product-card-name">${p.producto}</h3></a>
+          <a href="product.html?id=${id}"><h3 class="product-card-name">${nombre}</h3></a>
           <p class="product-card-price">$${Number(p.precio).toLocaleString('es-AR')}</p>
         </div>
         <div class="product-card-footer">
           ${hasStock
-            ? `<a href="product.html?id=${p.idProducto}" class="btn btn-outline btn-sm btn-full">Ver producto</a>`
+            ? `<a href="product.html?id=${id}" class="btn btn-outline btn-sm btn-full">Ver producto</a>`
             : `<button class="btn btn-ghost btn-sm btn-full" disabled>Sin stock</button>`}
         </div>
       </article>
@@ -117,9 +160,9 @@ function renderProducts(products) {
       try {
         await Api.post('/api/agregarFavorito', {
           id_producto: parseInt(btn.dataset.id),
-          id_usuario: user.id,
+          id_usuario:  user.id,
         });
-        btn.querySelector('svg').setAttribute('fill', 'var(--color-accent)');
+        btn.querySelector('svg').setAttribute('fill',   'var(--color-accent)');
         btn.querySelector('svg').setAttribute('stroke', 'var(--color-accent)');
         showToast('Agregado a favoritos ♥', 'success');
       } catch (err) {
@@ -130,12 +173,8 @@ function renderProducts(products) {
 }
 
 function updateCount(count) {
-  document.querySelector('.products-count').innerHTML =
-    `Mostrando <strong>${count}</strong> producto${count !== 1 ? 's' : ''}`;
-}
-
-function updateSortVisibility(show) {
-  // Mostrar/ocultar mensaje si filtros activos
+  const el = document.querySelector('.products-count');
+  if (el) el.innerHTML = `Mostrando <strong>${count}</strong> producto${count !== 1 ? 's' : ''}`;
 }
 
 // ── Búsqueda ─────────────────────────────────────────────────
@@ -145,12 +184,9 @@ function setupSearch() {
   if (!input) return;
 
   const doSearch = () => applyFilters();
-
   input.addEventListener('input', doSearch);
   if (btn) btn.addEventListener('click', doSearch);
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') doSearch();
-  });
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
 }
 
 // ── Filtros ──────────────────────────────────────────────────
@@ -165,24 +201,16 @@ function setupSort() {
   const sel = document.querySelector('.sort-select');
   if (!sel) return;
   sel.addEventListener('change', () => {
-    const grid = document.querySelector('.product-grid');
-    const cards = Array.from(grid?.querySelectorAll('.product-card') || []);
     const order = sel.value;
+    if (!order) return;
 
-    const sorted = cards.sort((a, b) => {
-      const getVal = (card, selector) => {
-        const el = card.querySelector(selector);
-        return el ? el.textContent.trim() : '';
-      };
-      if (order === 'precio-asc' || order === 'precio-desc') {
-        const aPrice = parseFloat(getVal(a, '.product-card-price').replace(/[^0-9]/g, '')) || 0;
-        const bPrice = parseFloat(getVal(b, '.product-card-price').replace(/[^0-9]/g, '')) || 0;
-        return order === 'precio-asc' ? aPrice - bPrice : bPrice - aPrice;
-      }
-      return 0;
-    });
+    let sorted = [...allProducts];
+    if (order === 'precio-asc')  sorted.sort((a, b) => a.precio - b.precio);
+    if (order === 'precio-desc') sorted.sort((a, b) => b.precio - a.precio);
 
-    sorted.forEach(card => grid?.appendChild(card));
+    // Re-aplicar filtros activos sobre el array ordenado
+    allProducts = sorted;
+    applyFilters();
   });
 }
 
@@ -192,7 +220,8 @@ function setupClearFilters() {
   if (!btn) return;
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filters-sidebar input[type="checkbox"]').forEach(cb => cb.checked = false);
-    document.querySelector('.header-search input').value = '';
+    const searchInput = document.querySelector('.header-search input');
+    if (searchInput) searchInput.value = '';
     applyFilters();
   });
 }

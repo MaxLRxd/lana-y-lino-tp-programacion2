@@ -92,29 +92,44 @@
               <input class="form-input" type="text" id="pf-direccion" value="Av. Corrientes 1234, CABA" autocomplete="street-address">
             </div>
 
-            <hr class="divider">
-
-            <p class="profile-section-title">Cambiar contraseña</p>
-            <div class="form-group">
-              <label class="form-label" for="pf-pass-actual">Contraseña actual</label>
-              <input class="form-input" type="password" id="pf-pass-actual" placeholder="••••••••" autocomplete="current-password">
-            </div>
-            <div class="profile-row">
-              <div class="form-group">
-                <label class="form-label" for="pf-pass-nueva">Nueva contraseña</label>
-                <input class="form-input" type="password" id="pf-pass-nueva" placeholder="••••••••" autocomplete="new-password">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="pf-pass-confirm">Confirmar contraseña</label>
-                <input class="form-input" type="password" id="pf-pass-confirm" placeholder="••••••••" autocomplete="new-password">
-              </div>
-            </div>
-
             <div class="profile-form-actions">
-              <button class="btn btn-ghost" type="button">Cancelar</button>
+              <button class="btn btn-ghost" type="button" id="btn-cancelar-perfil">Cancelar</button>
               <button class="btn btn-primary" type="submit">Guardar cambios</button>
             </div>
           </form>
+
+          <!-- Sección contraseña — separada del form de datos -->
+          <hr class="divider">
+
+          <div class="password-section">
+            <div class="password-section-header">
+              <p class="profile-section-title">Contraseña</p>
+              <button class="btn btn-outline btn-sm" type="button" id="btn-toggle-password">
+                Cambiar contraseña
+              </button>
+            </div>
+
+            <form class="password-form" id="password-form" novalidate style="display:none;">
+              <div class="form-group">
+                <label class="form-label" for="pf-pass-actual">Contraseña actual</label>
+                <input class="form-input" type="password" id="pf-pass-actual" placeholder="••••••••" autocomplete="current-password">
+              </div>
+              <div class="profile-row">
+                <div class="form-group">
+                  <label class="form-label" for="pf-pass-nueva">Nueva contraseña</label>
+                  <input class="form-input" type="password" id="pf-pass-nueva" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="pf-pass-confirm">Confirmar contraseña</label>
+                  <input class="form-input" type="password" id="pf-pass-confirm" placeholder="Repetí la contraseña" autocomplete="new-password">
+                </div>
+              </div>
+              <div class="profile-form-actions">
+                <button class="btn btn-ghost" type="button" id="btn-cancelar-pass">Cancelar</button>
+                <button class="btn btn-primary" type="submit" id="btn-guardar-pass">Guardar contraseña</button>
+              </div>
+            </form>
+          </div>
 
         </div>
       </div>
