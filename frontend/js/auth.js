@@ -22,6 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
       setLoading(form, true, 'Iniciando sesión...');
       try {
         const res = await Api.post('/api/login', { email: usuario, password }, false);
+        console.log('Login response:', res);
+
+        if (!res.jwt || res.codigo !== 200) {
+          throw new Error(res.mensaje || 'Email o contraseña incorrectos');
+        }
 
         const userData = res.payload?.[0] ?? { email: usuario, rol: 'usuario' };
         Api.setToken(res.jwt);
