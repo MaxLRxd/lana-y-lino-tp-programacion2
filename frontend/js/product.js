@@ -195,13 +195,23 @@ function setupAddToCart() {
     if (!talleInput) { showToast('Seleccioná un talle', 'error'); return; }
 
     const user = Api.getUser();
+    const idInventario = parseInt(talleInput.value);
+
+    // Verificar si ya está en el carrito
+    const cartRes = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
+    const cartItems = cartRes.payload || [];
+    if (cartItems.some(i => i.idInventario === idInventario)) {
+      showToast('Este producto ya está en tu carrito', 'error');
+      return;
+    }
+
     const originalHTML = btn.innerHTML;
     btn.disabled   = true;
     btn.textContent = 'Agregando...';
 
     try {
       await Api.post('/api/agregarACarrito', {
-        id_inventario: parseInt(talleInput.value),
+        id_inventario: idInventario,
         id_usuario:    user.id,
       });
       showToast('¡Producto agregado al carrito! 🛒', 'success');

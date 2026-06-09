@@ -24,17 +24,20 @@ async function loadFavorites() {
     }
 
     // 2. Traer datos de cada producto en paralelo
-    const results = (await Promise.allSettled(
-      favs.map(f => Api.get(`/api/obtenerDatosProducto/${f.id_producto}`, false))
-    )).filter(r => r.status === 'fulfilled').map(r => {
-      const data = r.value.payload?.[0];
-      return data ? {
-        id:         data.idProducto,
-        nombre:     data.producto,
-        precio:     data.precio,
-        imagen:     data.ulrImagen,
-        categoria:  data.categoria,
-      } : null;
+    const details = await Promise.allSettled(
+      favs.map(f => Api.get(`/api/obtenerDatosProducto/${f.idProducto || f.id_producto}`, false))
+    );
+    const results = favs.map((f, i) => {
+      if (details[i].status !== 'fulfilled') return null;
+      const data = details[i].value.payload?.[0];
+      if (!data) return null;
+      return {
+        id:        f.idProducto || f.id_producto,
+        nombre:    data.producto,
+        precio:    data.precio,
+        imagen:    data.ulrImagen,
+        categoria: data.categoria,
+      };
     }).filter(Boolean);
 
     renderFavorites(results);
