@@ -120,5 +120,4 @@ async function loadDropdownCategories() {
 // ── Init ────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   updateHeaderSession();
-  loadDropdownCategories();
 });

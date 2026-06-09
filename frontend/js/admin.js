@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // ── Categorías en el select ───────────────────────────────────
 async function loadCategoriesSelect() {
+  const select = document.getElementById('ad-categoria');
+  if (!select) return;
+
   try {
     const res    = await Api.get('/api/obtenerCategorias');
     const cats   = res.payload || [];
