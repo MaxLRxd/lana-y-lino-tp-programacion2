@@ -21,24 +21,13 @@ async function loadCategoriesSelect() {
   if (!select) return;
 
   try {
-    const res  = await Api.get('/api/obtenerCategorias'); // requiere auth — ok, admin siempre logueado
-    const cats = res.payload ?? res;                      // backend puede devolver { payload: [...] } o []
-
-    if (!Array.isArray(cats) || !cats.length) {
-      select.innerHTML = `<option value="">Sin categorías cargadas</option>`;
-      return;
-    }
-
-    select.innerHTML =
-      `<option value="">Seleccioná...</option>` +
-      cats.map(c => `<option value="${c.id_categoria}">${c.nombre}</option>`).join('');
-
-    // Guardar globalmente para usar en enterEditMode
-    window._categorias = cats;
-  } catch (err) {
-    select.innerHTML = `<option value="">Error al cargar</option>`;
-    console.error('loadCategoriesSelect:', err);
-  }
+    const res    = await Api.get('/api/obtenerCategorias');
+    const cats   = res.payload || [];
+    const select = document.getElementById('ad-categoria');
+    if (!select) return;
+    select.innerHTML = `<option value="">Seleccioná...</option>` +
+      cats.map(c => `<option value="${c.id_categoria || c.id}">${c.nombre}</option>`).join('');
+  } catch { /* silencioso */ }
 }
 
 // ── Tabla de productos ────────────────────────────────────────
@@ -48,9 +37,10 @@ async function loadProductsTable(query = '') {
   tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--color-text-muted);padding:24px">Cargando...</td></tr>`;
 
   try {
-    let products = await Api.get('/api/obtenerProductos', false);
+    const res = await Api.get('/api/obtenerProductos', false);
+    let products = res.payload || [];
     if (query) {
-      products = products.filter(p => p.nombre.toLowerCase().includes(query.toLowerCase()));
+      products = products.filter(p => (p.producto || p.nombre)?.toLowerCase().includes(query.toLowerCase()));
     }
     renderTable(products);
   } catch {
@@ -72,9 +62,9 @@ function renderTable(products) {
       <td>
         <div class="admin-table-product-cell">
           <div class="admin-table-thumb">
-            <img src="${p.imagen || 'assets/images/placeholder.jpg'}" alt="${p.nombre}">
+            <img src="${p.ulrImagen || p.imagen || 'assets/images/placeholder.jpg'}" alt="${p.producto || p.nombre}">
           </div>
-          <span class="admin-table-product-name">${p.nombre}</span>
+          <span class="admin-table-product-name">${p.producto || p.nombre}</span>
         </div>
       </td>
       <td>${p.categoria || '-'}</td>
@@ -109,7 +99,7 @@ function enterEditMode(product) {
   if (!form) return;
 
   // Rellenar campos
-  setValue('ad-nombre',      product.nombre      || '');
+  setValue('ad-nombre',      product.producto || product.nombre || '');
   setValue('ad-descripcion', product.descripcion || '');
   setValue('ad-precio',      product.precio      || '');
   setValue('ad-genero',      (product.genero || '').toLowerCase());
@@ -118,7 +108,9 @@ function enterEditMode(product) {
 
   // Categoría
   const catSelect = document.getElementById('ad-categoria');
-  if (catSelect && product.id_categoria) catSelect.value = product.id_categoria;
+  if (catSelect && (product.idCategoria || product.id_categoria)) {
+    catSelect.value = product.idCategoria || product.id_categoria;
+  }
 
   // Marcar talles
   document.querySelectorAll('input[name="talles"]').forEach(cb => cb.checked = false);
@@ -127,10 +119,10 @@ function enterEditMode(product) {
     if (cb) cb.checked = true;
   });
 
-  form.dataset.editId           = product.id;
+  form.dataset.editId           = product.idProducto || product.id;
   form.dataset.editInventarioId = product.id_inventario || '';
 
-  if (title) title.textContent = `Editando: ${product.nombre}`;
+  if (title) title.textContent = `Editando: ${product.producto || product.nombre}`;
   if (btn)   btn.textContent   = 'Guardar cambios';
 
   // Scroll al formulario
@@ -159,7 +151,7 @@ function setupAdminForm() {
     const stock       = parseInt(document.getElementById('ad-stock')?.value) || 0;
     const talles      = [...document.querySelectorAll('input[name="talles"]:checked')].map(i => i.value);
 
-    if (!nombre || !precio || !genero || !idCategoria || !color) {
+    if (!nombre || isNaN(precio) || precio <= 0 || !genero || !idCategoria || !color) {
       showToast('Completá todos los campos obligatorios', 'error');
       return;
     }
@@ -186,15 +178,20 @@ function setupAdminForm() {
           imagen: '',
         });
 
-        const productId = res.id || res.id_producto;
+        const productId = res.payload?.[0]?.idProducto || res.insertId;
+        console.log('Producto creado ID:', productId, 'Talles:', talles);
 
         // Crear entradas de inventario (una por talle)
         if (productId && talles.length) {
-          await Promise.allSettled(
-            talles.map(talle =>
-              Api.post('/api/crearInventario', { talle, color, stock, id_producto: productId })
-            )
-          );
+          try {
+            await Promise.all(
+              talles.map(talle =>
+                Api.post('/api/crearInventario', { talle, color, stock, id_producto: productId })
+              )
+            );
+          } catch (invErr) {
+            showToast('Producto creado pero hubo un error al guardar talles/stock', 'error');
+          }
         }
 
         showToast('Producto creado correctamente ✓', 'success');

@@ -14,8 +14,16 @@ async function loadCart() {
   container.innerHTML = `<p style="text-align:center;padding:32px;color:var(--color-text-muted)">Cargando...</p>`;
 
   try {
-    const items = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
-    renderCart(items || []);
+    const res = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
+    const items = (res.payload || []).map(i => ({
+      id_inventario: i.idInventario,
+      nombre:        i.producto,
+      precio:        i.precio,
+      imagen:        i.urlImagen,
+      talle:         i.talle,
+      color:         i.color,
+    }));
+    renderCart(items);
   } catch {
     container.innerHTML = `<div class="alert alert-error">Error al cargar el carrito.</div>`;
   }

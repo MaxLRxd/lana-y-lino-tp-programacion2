@@ -14,7 +14,43 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ── Carga del producto ───────────────────────────────────────
 async function loadProduct(id) {
   try {
-    const product = await Api.get(`/api/obtenerDatosProducto/${id}`, false);
+    const res = await Api.get(`/api/obtenerDatosProducto/${id}`, false);
+    let product;
+
+    if (res.payload?.length) {
+      product = {
+        nombre:      res.payload[0].producto,
+        descripcion: res.payload[0].descripcion,
+        precio:      res.payload[0].precio,
+        genero:      res.payload[0].genero,
+        imagen:      res.payload[0].ulrImagen,
+        categoria:   res.payload[0].categoria,
+        id_categoria: res.payload[0].idCategoria,
+        color:       res.payload[0].color,
+        inventario:  res.payload.map(row => ({
+          id:    row.idInventario,
+          talle: row.talle,
+          color: row.color,
+          stock: row.stock,
+        })),
+      };
+    } else {
+      const all = await Api.get('/api/obtenerProductos', false);
+      const p = (all.payload || []).find(x => x.idProducto == id);
+      if (!p) throw new Error();
+      product = {
+        nombre:      p.producto,
+        descripcion: p.descripcion || '',
+        precio:      p.precio || 0,
+        genero:      p.genero || '',
+        imagen:      p.ulrImagen || '',
+        categoria:   p.categoria || '',
+        id_categoria: p.idCategoria,
+        color:       '',
+        inventario:  [],
+      };
+    }
+
     renderProduct(product);
   } catch {
     document.querySelector('.product-detail-layout').innerHTML =
@@ -159,13 +195,23 @@ function setupAddToCart() {
     if (!talleInput) { showToast('Seleccioná un talle', 'error'); return; }
 
     const user = Api.getUser();
+    const idInventario = parseInt(talleInput.value);
+
+    // Verificar si ya está en el carrito
+    const cartRes = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
+    const cartItems = cartRes.payload || [];
+    if (cartItems.some(i => i.idInventario === idInventario)) {
+      showToast('Este producto ya está en tu carrito', 'error');
+      return;
+    }
+
     const originalHTML = btn.innerHTML;
     btn.disabled   = true;
     btn.textContent = 'Agregando...';
 
     try {
       await Api.post('/api/agregarACarrito', {
-        id_inventario: parseInt(talleInput.value),
+        id_inventario: idInventario,
         id_usuario:    user.id,
       });
       showToast('¡Producto agregado al carrito! 🛒', 'success');

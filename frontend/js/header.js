@@ -54,10 +54,11 @@ async function updateCartBadge() {
   try {
     const user = Api.getUser();
     if (!user) return;
-    const items = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
+    const res   = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
+    const items = res.payload || [];
     const badge = document.querySelector('.icon-btn .badge');
     if (!badge) return;
-    const count = Array.isArray(items) ? items.length : 0;
+    const count = items.length;
     badge.textContent = count;
     badge.style.display = count > 0 ? '' : 'none';
   } catch { /* silencioso */ }
@@ -90,6 +91,30 @@ function updateHeaderSession() {
 
   // Badge del carrito
   if (isLoggedIn) updateCartBadge();
+}
+
+// ── Cargar categorías en el menú desplegable ────────────────
+async function loadDropdownCategories() {
+  try {
+    const res  = await Api.get('/api/obtenerCategorias');
+    const cats = res.payload || [];
+    if (!cats.length) return;
+
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+      const allLink = menu.querySelector('a:first-child')?.cloneNode(true);
+      const divider  = menu.querySelector('.dropdown-divider')?.cloneNode(true);
+      menu.innerHTML = '';
+      if (allLink) menu.appendChild(allLink);
+      if (divider)  menu.appendChild(divider);
+
+      cats.forEach(cat => {
+        const a = document.createElement('a');
+        a.href        = `index.html?categoria=${cat.id_categoria || cat.id}`;
+        a.textContent = cat.nombre;
+        menu.appendChild(a);
+      });
+    });
+  } catch { /* silencioso */ }
 }
 
 // ── Init ────────────────────────────────────────────────────

@@ -14,8 +14,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadPaymentItems() {
   const user = Api.getUser();
   try {
-    const items = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
-    renderOrderSummary(items || []);
+    const res = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
+    const items = (res.payload || []).map(i => ({
+      nombre:  i.producto,
+      precio:  i.precio,
+      imagen:  i.urlImagen,
+      talle:   i.talle,
+      color:   i.color,
+    }));
+    renderOrderSummary(items);
   } catch {
     showToast('Error al cargar el pedido', 'error');
   }
@@ -120,22 +127,45 @@ function setupPayButton() {
   const btn = document.getElementById('btn-pay');
   if (!btn) return;
 
-  // Habilitar si método es transferencia (no requiere tarjeta)
   document.querySelector('input[name="metodo"]')?.dispatchEvent(new Event('change'));
 
-  btn.addEventListener('click', () => {
-    const layout = document.querySelector('.payment-layout');
-    if (layout) {
-      layout.innerHTML = `
-        <div class="payment-success" style="grid-column:1/-1;">
-          <div class="payment-success-icon">✅</div>
-          <h2>¡Pago aprobado con éxito!</h2>
-          <p>Tu compra fue procesada correctamente.<br>
-             Recibirás un email de confirmación.</p>
-          <a href="index.html" class="btn btn-primary btn-lg" style="margin-top:var(--sp-lg);">
-            Seguir comprando
-          </a>
-        </div>`;
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    btn.textContent = 'Procesando...';
+
+    try {
+      const user = Api.getUser();
+      const res = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
+      const items = res.payload || [];
+
+      // Vaciar carrito
+      await Promise.allSettled(
+        items.map(item =>
+          Api.delete('/api/eliminarProductoCarrito', {
+            id_usuario: user.id,
+            id_inventario: item.idInventario,
+          })
+        )
+      );
+
+      const layout = document.querySelector('.payment-layout');
+      if (layout) {
+        layout.innerHTML = `
+          <div class="payment-success" style="grid-column:1/-1;">
+            <div class="payment-success-icon">✅</div>
+            <h2>¡Pago aprobado con éxito!</h2>
+            <p>Tu compra fue procesada correctamente.<br>
+               Recibirás un email de confirmación.</p>
+            <a href="index.html" class="btn btn-primary btn-lg" style="margin-top:var(--sp-lg);">
+              Seguir comprando
+            </a>
+          </div>`;
+        updateCartBadge();
+      }
+    } catch {
+      showToast('Error al procesar el pago', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Pagar';
     }
   });
 }
