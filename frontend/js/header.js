@@ -95,8 +95,9 @@ function updateHeaderSession() {
 // ── Cargar categorías en el menú desplegable ────────────────
 async function loadDropdownCategories() {
   try {
-    const cats = await Api.get('/api/obtenerCategorias');
-    if (!cats || !Array.isArray(cats)) return;
+    const res  = await Api.get('/api/obtenerCategorias');
+    const cats = res.payload ?? res;
+    if (!Array.isArray(cats) || !cats.length) return;
 
     document.querySelectorAll('.dropdown-menu').forEach(menu => {
       // Conservar "Todos los productos" y el divisor
@@ -108,7 +109,7 @@ async function loadDropdownCategories() {
 
       cats.forEach(cat => {
         const a = document.createElement('a');
-        a.href        = `index.html?categoria=${cat.id}`;
+        a.href        = `index.html?categoria=${cat.id_categoria}`;
         a.textContent = cat.nombre;
         menu.appendChild(a);
       });

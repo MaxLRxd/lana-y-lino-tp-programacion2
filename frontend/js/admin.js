@@ -17,13 +17,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // ── Categorías en el select ───────────────────────────────────
 async function loadCategoriesSelect() {
+  const select = document.getElementById('ad-categoria');
+  if (!select) return;
+
   try {
-    const cats   = await Api.get('/api/obtenerCategorias');
-    const select = document.getElementById('ad-categoria');
-    if (!select || !cats) return;
-    select.innerHTML = `<option value="">Seleccioná...</option>` +
-      cats.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-  } catch { /* silencioso */ }
+    const res  = await Api.get('/api/obtenerCategorias'); // requiere auth — ok, admin siempre logueado
+    const cats = res.payload ?? res;                      // backend puede devolver { payload: [...] } o []
+
+    if (!Array.isArray(cats) || !cats.length) {
+      select.innerHTML = `<option value="">Sin categorías cargadas</option>`;
+      return;
+    }
+
+    select.innerHTML =
+      `<option value="">Seleccioná...</option>` +
+      cats.map(c => `<option value="${c.id_categoria}">${c.nombre}</option>`).join('');
+
+    // Guardar globalmente para usar en enterEditMode
+    window._categorias = cats;
+  } catch (err) {
+    select.innerHTML = `<option value="">Error al cargar</option>`;
+    console.error('loadCategoriesSelect:', err);
+  }
 }
 
 // ── Tabla de productos ────────────────────────────────────────

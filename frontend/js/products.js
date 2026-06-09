@@ -5,12 +5,49 @@
 let allProducts = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
+  await loadCategoriasFilter();
   await loadProducts();
   setupSearch();
   setupFilters();
   setupSort();
   setupClearFilters();
 });
+
+// ── Categorías del sidebar desde la BD ──────────────────────
+async function loadCategoriasFilter() {
+  const container = document.querySelector('.filter-options[data-filter="categoria"]');
+  if (!container) return;
+
+  try {
+    const res  = await Api.get('/api/obtenerCategorias');
+    const cats = res.payload ?? res;
+    if (!Array.isArray(cats) || !cats.length) return;
+
+    container.innerHTML = cats.map(c => {
+      const val = c.nombre.toLowerCase();
+      return `
+        <label class="filter-option">
+          <input type="checkbox" name="categoria" value="${val}" data-id="${c.id_categoria}">
+          <span>${c.nombre}</span>
+          <span class="filter-count">0</span>
+        </label>`;
+    }).join('');
+
+    // Re-enganchamos los listeners ahora que el DOM está listo
+    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', applyFilters);
+    });
+
+    // Si viene ?categoria=ID en la URL, marcar el checkbox correspondiente
+    const urlCat = new URLSearchParams(window.location.search).get('categoria');
+    if (urlCat) {
+      const match = container.querySelector(`input[data-id="${urlCat}"], input[value="${urlCat.toLowerCase()}"]`);
+      if (match) match.checked = true;
+    }
+  } catch {
+    // Si falla (sin auth o sin BD), deja los filtros estáticos del HTML
+  }
+}
 
 // ── Carga de productos ───────────────────────────────────────
 async function loadProducts() {
