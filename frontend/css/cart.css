@@ -551,3 +551,73 @@
   display: flex;
   gap: var(--sp-xs);
 }
+
+/* Wrapper para que la tabla pueda scrollear horizontalmente */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+@media (max-width: 1024px) {
+  .cart-layout,
+  .payment-layout,
+  .admin-layout {
+    grid-template-columns: 1fr;
+    padding: 0 var(--sp-md);
+    gap: var(--sp-lg);
+  }
+
+  .cart-summary,
+  .admin-sidebar {
+    position: static;
+    top: auto;
+  }
+
+  .admin-form-row-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-form-row-2,
+  .admin-form-row-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-card,
+  .payment-card {
+    padding: var(--sp-lg);
+  }
+
+  .admin-table {
+    min-width: 640px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cart-item {
+    grid-template-columns: 80px 1fr;
+  }
+
+  .cart-item-image {
+    width: 80px;
+    height: 100px;
+  }
+
+  .cart-item-actions {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .payment-methods {
+    grid-template-columns: 1fr;
+  }
+
+  .card-row {
+    grid-template-columns: 1fr;
+  }
+}

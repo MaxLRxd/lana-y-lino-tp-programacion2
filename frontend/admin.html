@@ -20,6 +20,9 @@
 
     <header class="header">
       <div class="header-inner">
+        <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
         <div class="header-left">
           <div class="header-search">
             <input type="text" placeholder="Buscar productos...">
@@ -76,6 +79,14 @@
                 <label class="form-label" for="ad-descripcion">Descripción</label>
                 <textarea class="form-textarea" id="ad-descripcion" placeholder="Descripción detallada del producto..." required></textarea>
               </div>
+              <div class="form-group">
+                <label class="form-label" for="ad-imagen">Imagen</label>
+                <input class="form-input" type="file" id="ad-imagen" accept="image/*">
+                <small style="color:var(--color-text-muted)">
+                  Seleccioná la imagen del producto: se va a pedir guardarla en la carpeta assets/ del proyecto.
+                </small>
+                <small id="ad-imagen-hint" style="color:var(--color-text-muted)"></small>
+              </div>
               <div class="admin-form-row-3">
                 <div class="form-group">
                   <label class="form-label" for="ad-genero">Género</label>
@@ -110,7 +121,7 @@
 
               <div class="form-group">
                 <span class="form-label">Talles disponibles</span>
-                <div class="size-check-group">
+                <div class="size-check-group" data-tipo-talle="ropa">
                   <div class="size-check-item">
                     <input type="checkbox" id="sz-xs" name="talles" value="XS">
                     <label for="sz-xs">XS</label>
@@ -135,6 +146,8 @@
                     <input type="checkbox" id="sz-xxl" name="talles" value="XXL">
                     <label for="sz-xxl">XXL</label>
                   </div>
+                </div>
+                <div class="size-check-group" data-tipo-talle="calzado" style="display:none">
                   <div class="size-check-item">
                     <input type="checkbox" id="sz-36" name="talles" value="36">
                     <label for="sz-36">36</label>
@@ -157,7 +170,7 @@
               <div class="admin-form-row-2">
                 <div class="form-group">
                   <label class="form-label" for="ad-precio">Precio ($)</label>
-                  <input class="form-input" type="number" id="ad-precio" placeholder="0.00" min="0" step="0.01" required>
+                  <input class="form-input" type="text" inputmode="decimal" id="ad-precio" placeholder="0,00" required>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="ad-stock">Stock inicial</label>
@@ -183,77 +196,23 @@
               <button class="btn btn-primary" type="button">Buscar</button>
             </div>
 
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th>Categoría</th>
-                  <th>Precio</th>
-                  <th>Stock</th>
-                  <th>Color</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="admin-table-product-cell">
-                      <div class="admin-table-thumb">
-                        <img src="assets/images/remera-clasica.jpg" alt="Remera Clásica">
-                      </div>
-                      <span class="admin-table-product-name">Remera Clásica Algodón</span>
-                    </div>
-                  </td>
-                  <td>Remeras</td>
-                  <td>$8.900</td>
-                  <td>14</td>
-                  <td>Negro</td>
-                  <td>
-                    <div class="admin-table-actions">
-                      <button class="btn btn-ghost btn-sm" type="button">Editar</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="admin-table-product-cell">
-                      <div class="admin-table-thumb">
-                        <img src="assets/images/buzo-oversize.jpg" alt="Buzo Oversize">
-                      </div>
-                      <span class="admin-table-product-name">Buzo Oversize Frisa Interior</span>
-                    </div>
-                  </td>
-                  <td>Buzos</td>
-                  <td>$14.500</td>
-                  <td>8</td>
-                  <td>Beige</td>
-                  <td>
-                    <div class="admin-table-actions">
-                      <button class="btn btn-ghost btn-sm" type="button">Editar</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="admin-table-product-cell">
-                      <div class="admin-table-thumb">
-                        <img src="assets/images/campera-jean.jpg" alt="Campera Jean">
-                      </div>
-                      <span class="admin-table-product-name">Campera Jean Desgastada</span>
-                    </div>
-                  </td>
-                  <td>Camperas</td>
-                  <td>$22.000</td>
-                  <td>0</td>
-                  <td>Azul</td>
-                  <td>
-                    <div class="admin-table-actions">
-                      <button class="btn btn-ghost btn-sm" type="button">Editar</button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Color</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td colspan="6" style="text-align:center;color:var(--color-text-muted);padding:24px">Cargando...</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
         </div>

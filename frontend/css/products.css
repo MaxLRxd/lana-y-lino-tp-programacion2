@@ -242,13 +242,23 @@
   color: var(--color-text);
 }
 
-.product-card:hover .product-card-wishlist {
+.product-card:hover .product-card-wishlist,
+.product-card-wishlist.is-active {
   opacity: 1;
   transform: scale(1);
 }
 
 .product-card-wishlist:hover {
   background-color: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+.product-card-wishlist.is-active {
+  background-color: var(--color-accent-light);
+}
+
+#btn-wishlist.is-active {
+  border-color: var(--color-accent);
   color: var(--color-accent);
 }
 
@@ -585,3 +595,63 @@
 
 /* Default: show 1 cuota on load */
 .cp-1 { display: block; }
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+@media (max-width: 1024px) {
+  .products-layout {
+    grid-template-columns: 1fr;
+    padding: 0 var(--sp-md);
+    gap: var(--sp-lg);
+  }
+
+  .filters-sidebar {
+    position: static;
+    top: auto;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-detail-layout {
+    grid-template-columns: 1fr;
+    padding: 0 var(--sp-md) var(--sp-xl);
+    gap: var(--sp-lg);
+  }
+
+  .product-gallery {
+    position: static;
+    top: auto;
+  }
+
+  .breadcrumb {
+    padding: var(--sp-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .products-toolbar {
+    flex-wrap: wrap;
+    gap: var(--sp-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-gallery-thumbs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .product-info-name {
+    font-size: 1.5rem;
+  }
+
+  .product-info-price {
+    font-size: 1.4rem;
+  }
+}

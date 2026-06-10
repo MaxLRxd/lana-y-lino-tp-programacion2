@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Remera Clásica Algodón — Lana &amp; Lino</title>
+  <title>Producto — Lana &amp; Lino</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -20,6 +20,9 @@
 
     <header class="header">
       <div class="header-inner">
+        <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
         <div class="header-left">
           <div class="header-search">
             <input type="text" placeholder="Buscar productos...">
@@ -45,7 +48,7 @@
               <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
-            <span class="badge">2</span>
+            <span class="badge" style="display:none">0</span>
           </a>
           <a href="profile.html" class="icon-btn" title="Mi cuenta">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -67,9 +70,7 @@
       <nav class="breadcrumb">
         <a href="index.html">Inicio</a>
         <span class="breadcrumb-sep">›</span>
-        <a href="index.html">Remeras</a>
-        <span class="breadcrumb-sep">›</span>
-        <span>Remera Clásica Algodón</span>
+        <span>Cargando...</span>
       </nav>
 
       <div class="product-detail-layout">
@@ -77,64 +78,29 @@
         <!-- GALLERY -->
         <div class="product-gallery">
           <div class="product-gallery-main">
-            <img src="assets/images/remera-clasica-main.jpg" alt="Remera Clásica Algodón — vista principal">
+            <img src="assests/default.png" alt="Producto" onerror="imgFallback(this)">
           </div>
-          <div class="product-gallery-thumbs">
-            <div class="product-gallery-thumb active">
-              <img src="assets/images/remera-clasica-1.jpg" alt="Vista 1">
-            </div>
-            <div class="product-gallery-thumb">
-              <img src="assets/images/remera-clasica-2.jpg" alt="Vista 2">
-            </div>
-            <div class="product-gallery-thumb">
-              <img src="assets/images/remera-clasica-3.jpg" alt="Vista 3">
-            </div>
-            <div class="product-gallery-thumb">
-              <img src="assets/images/remera-clasica-4.jpg" alt="Vista 4">
-            </div>
-          </div>
+          <div class="product-gallery-thumbs"></div>
         </div>
 
         <!-- INFO -->
         <div class="product-info">
-          <p class="product-info-category">Remeras · Mujer · Negro</p>
-          <h1 class="product-info-name">Remera Clásica Algodón</h1>
-          <p class="product-info-price">$8.900</p>
+          <p class="product-info-category">Cargando...</p>
+          <h1 class="product-info-name">Cargando...</h1>
+          <p class="product-info-price">$0</p>
 
           <div class="stock-indicator">
-            <span class="stock-dot in-stock"></span>
-            <span>En stock — 14 unidades disponibles</span>
+            <span class="stock-dot"></span>
+            <span>Cargando disponibilidad...</span>
           </div>
 
-          <p class="product-info-description">
-            Remera básica de algodón 100% peinado. Corte regular, cuello redondo reforzado.
-            Ideal para el uso diario, combina con cualquier look. Lavado a máquina a 30°.
-          </p>
+          <p class="product-info-description">Cargando descripción...</p>
 
           <!-- Size selector -->
           <div>
             <span class="selector-label">Talle</span>
             <div class="size-options">
-              <div class="size-option unavailable">
-                <input type="radio" name="talle" id="t-xs" value="XS">
-                <label for="t-xs">XS</label>
-              </div>
-              <div class="size-option">
-                <input type="radio" name="talle" id="t-s" value="S">
-                <label for="t-s">S</label>
-              </div>
-              <div class="size-option">
-                <input type="radio" name="talle" id="t-m" value="M" checked>
-                <label for="t-m">M</label>
-              </div>
-              <div class="size-option">
-                <input type="radio" name="talle" id="t-l" value="L">
-                <label for="t-l">L</label>
-              </div>
-              <div class="size-option">
-                <input type="radio" name="talle" id="t-xl" value="XL">
-                <label for="t-xl">XL</label>
-              </div>
+              <p style="color:var(--color-text-muted);font-size:.875rem;">Cargando talles...</p>
             </div>
           </div>
 
@@ -161,11 +127,11 @@
             </div>
 
             <div class="cuotas-prices">
-              <p class="cuota-price cp-1">$8.900 <span>— cuota única, sin interés</span></p>
-              <p class="cuota-price cp-3">3 × $2.967 <span>— sin interés</span></p>
-              <p class="cuota-price cp-6">6 × $1.854 <span>— con interés (CFT 15%)</span></p>
-              <p class="cuota-price cp-9">9 × $1.336 <span>— con interés (CFT 18%)</span></p>
-              <p class="cuota-price cp-12">12 × $1.075 <span>— con interés (CFT 22%)</span></p>
+              <p class="cuota-price cp-1">Cargando...</p>
+              <p class="cuota-price cp-3">Cargando...</p>
+              <p class="cuota-price cp-6">Cargando...</p>
+              <p class="cuota-price cp-9">Cargando...</p>
+              <p class="cuota-price cp-12">Cargando...</p>
             </div>
           </div>
 

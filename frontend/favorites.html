@@ -20,6 +20,9 @@
 
     <header class="header">
       <div class="header-inner">
+        <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
         <div class="header-left">
           <div class="header-search">
             <input type="text" placeholder="Buscar productos...">
@@ -43,76 +46,13 @@
       <div class="page-header">
         <div class="page-header-inner">
           <h1>Mis favoritos</h1>
-          <p>3 productos guardados</p>
+          <p>0 productos guardados</p>
         </div>
       </div>
 
       <div class="favorites-layout">
         <div class="favorites-grid">
-
-          <article class="fav-card">
-            <a href="product.html" class="fav-card-image">
-              <img src="assets/images/remera-clasica.jpg" alt="Remera Clásica Algodón">
-            </a>
-            <div class="fav-card-body">
-              <h3 class="fav-card-name">Remera Clásica Algodón</h3>
-              <p class="fav-card-price">$8.900</p>
-            </div>
-            <div class="fav-card-footer">
-              <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
-              <button class="btn btn-danger btn-sm" type="button" title="Eliminar de favoritos">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6l-1 14H6L5 6"></path>
-                  <path d="M10 11v6M14 11v6"></path>
-                  <path d="M9 6V4h6v2"></path>
-                </svg>
-              </button>
-            </div>
-          </article>
-
-          <article class="fav-card">
-            <a href="product.html" class="fav-card-image">
-              <img src="assets/images/buzo-oversize.jpg" alt="Buzo Oversize Frisa">
-            </a>
-            <div class="fav-card-body">
-              <h3 class="fav-card-name">Buzo Oversize Frisa Interior</h3>
-              <p class="fav-card-price">$14.500</p>
-            </div>
-            <div class="fav-card-footer">
-              <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
-              <button class="btn btn-danger btn-sm" type="button" title="Eliminar de favoritos">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6l-1 14H6L5 6"></path>
-                  <path d="M10 11v6M14 11v6"></path>
-                  <path d="M9 6V4h6v2"></path>
-                </svg>
-              </button>
-            </div>
-          </article>
-
-          <article class="fav-card">
-            <a href="product.html" class="fav-card-image">
-              <img src="assets/images/pantalon-cargo.jpg" alt="Pantalón Cargo Gabardina">
-            </a>
-            <div class="fav-card-body">
-              <h3 class="fav-card-name">Pantalón Cargo Gabardina</h3>
-              <p class="fav-card-price">$18.500</p>
-            </div>
-            <div class="fav-card-footer">
-              <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
-              <button class="btn btn-danger btn-sm" type="button" title="Eliminar de favoritos">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6l-1 14H6L5 6"></path>
-                  <path d="M10 11v6M14 11v6"></path>
-                  <path d="M9 6V4h6v2"></path>
-                </svg>
-              </button>
-            </div>
-          </article>
-
+          <p style="grid-column:1/-1;text-align:center;padding:32px;color:var(--color-text-muted)">Cargando...</p>
         </div>
       </div>
     </main>
@@ -122,11 +62,12 @@
         <div class="footer-brand"><h3>Lana &amp; Lino</h3><p>Indumentaria de calidad.</p></div>
         <div class="footer-col"><h4>Navegación</h4><ul><li><a href="index.html">Catálogo</a></li></ul></div>
         <div class="footer-col"><h4>Categorías</h4><ul><li><a href="#">Remeras</a></li></ul></div>
-        <div class="footer-col"><h4>Contacto</h4><ul><li><span
-    8:48 p. m.class="footer-contact-item">✉ info@lanaylino.com</span></li></ul></div>
-    </div>
-    <div class="footer-bottom"><p>© 2025 Lana & Lino.</p><p>Desarrollado por Grupo 7</p></div>
-  </footer>  </div>
+        <div class="footer-col"><h4>Contacto</h4><ul><li><span class="footer-contact-item">✉ info@lanaylino.com</span></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>© 2025 Lana &amp; Lino.</p><p>Desarrollado por Grupo 7</p></div>
+    </footer>
+
+  </div>
 
     <script src="js/api.js"></script>
     <script src="js/header.js"></script>

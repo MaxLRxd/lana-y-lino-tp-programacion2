@@ -166,3 +166,90 @@
 .dark-toggle-label:hover {
   background-color: var(--color-surface-2);
 }
+
+/* ============================
+   MOBILE NAV TOGGLE (hamburger)
+   ============================ */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  color: var(--color-text);
+  flex-shrink: 0;
+  transition: background-color var(--transition);
+}
+
+.nav-toggle:hover {
+  background-color: var(--color-surface-2);
+}
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+@media (max-width: 768px) {
+  .header-inner {
+    grid-template-columns: auto 1fr auto;
+    gap: 0 var(--sp-sm);
+    position: relative;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  /* Fila 1 (siempre visible): menú · Lana & Lino · sesión */
+  .header-left {
+    display: none;
+  }
+
+  /* Fila 2 (desplegable): buscador */
+  .header.nav-open .header-left {
+    display: flex;
+    grid-column: 1 / -1;
+    padding-top: var(--sp-sm);
+  }
+
+  .header-search {
+    width: 100%;
+  }
+
+  .header-search input {
+    width: 100%;
+    flex: 1;
+  }
+
+  /* Fila 3 (desplegable): gestionar productos + acciones */
+  .header-actions {
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-height: 0;
+    overflow: hidden;
+    gap: var(--sp-sm);
+    transition: max-height var(--transition);
+  }
+
+  .header.nav-open {
+    height: auto;
+    padding-bottom: var(--sp-md);
+  }
+
+  .header.nav-open .header-actions {
+    max-height: 220px;
+    padding-top: var(--sp-sm);
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* El botón de sesión se fija en la fila 1, fuera del menú desplegable */
+  .btn-session {
+    position: absolute;
+    top: calc((var(--header-height) - 44px) / 2);
+    right: 0;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}

@@ -402,3 +402,44 @@ h4 { font-size: 1.25rem; }
 .swatch-marron  { background-color: #7b4a2d; }
 .swatch-rosa    { background-color: #e8a4b0; }
 .swatch-amarillo { background-color: #e6c84a; }
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+@media (max-width: 1024px) {
+  .container,
+  .page-header-inner {
+    padding: 0 var(--sp-md);
+  }
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.6rem; }
+  h3 { font-size: 1.25rem; }
+
+  .main {
+    padding: var(--sp-lg) 0;
+  }
+
+  /* Área táctil mínima 44x44px */
+  .icon-btn,
+  .dark-toggle-label {
+    width: 44px;
+    height: 44px;
+  }
+
+  .btn,
+  .btn-sm {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.35rem; }
+
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+}

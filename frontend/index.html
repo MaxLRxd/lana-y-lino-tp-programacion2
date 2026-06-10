@@ -22,6 +22,10 @@
     <header class="header">
       <div class="header-inner">
 
+        <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+
         <div class="header-left">
           <div class="header-search">
             <input type="text" placeholder="Buscar productos...">
@@ -56,7 +60,7 @@
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
-            <span class="badge">2</span>
+            <span class="badge" style="display:none">0</span>
           </a>
 
           <a href="profile.html" class="icon-btn" title="Mi cuenta">
@@ -97,17 +101,17 @@
               <label class="filter-option">
                 <input type="checkbox" name="genero" value="mujer">
                 <span>Mujer</span>
-                <span class="filter-count">48</span>
+                <span class="filter-count">0</span>
               </label>
               <label class="filter-option">
                 <input type="checkbox" name="genero" value="hombre">
                 <span>Hombre</span>
-                <span class="filter-count">42</span>
+                <span class="filter-count">0</span>
               </label>
               <label class="filter-option">
                 <input type="checkbox" name="genero" value="unisex">
                 <span>Unisex</span>
-                <span class="filter-count">16</span>
+                <span class="filter-count">0</span>
               </label>
             </div>
           </div>
@@ -198,7 +202,7 @@
         <!-- PRODUCTS -->
         <section>
           <div class="products-toolbar">
-            <p class="products-count">Mostrando <strong>106</strong> productos</p>
+            <p class="products-count">Mostrando <strong>0</strong> productos</p>
             <select class="sort-select" aria-label="Ordenar por">
               <option value="">Ordenar por</option>
               <option value="precio-asc">Precio: menor a mayor</option>
@@ -208,130 +212,7 @@
           </div>
 
           <div class="product-grid">
-
-            <article class="product-card">
-              <a href="product.html">
-                <div class="product-card-image">
-                  <img src="assets/images/remera-clasica.jpg" alt="Remera Clásica Algodón">
-                  <span class="product-card-badge">Nuevo</span>
-                  <button class="product-card-wishlist" type="button" title="Guardar en favoritos">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                  </button>
-                </div>
-              </a>
-              <div class="product-card-body">
-                <p class="product-card-category">Remeras · Mujer</p>
-                <a href="product.html"><h3 class="product-card-name">Remera Clásica Algodón</h3></a>
-                <p class="product-card-price">$8.900</p>
-              </div>
-              <div class="product-card-footer">
-                <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
-              </div>
-            </article>
-
-            <article class="product-card">
-              <a href="product.html">
-                <div class="product-card-image">
-                  <img src="assets/images/buzo-oversize.jpg" alt="Buzo Oversize Frisa">
-                  <button class="product-card-wishlist" type="button" title="Guardar en favoritos">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                  </button>
-                </div>
-              </a>
-              <div class="product-card-body">
-                <p class="product-card-category">Buzos · Unisex</p>
-                <a href="product.html"><h3 class="product-card-name">Buzo Oversize Frisa Interior</h3></a>
-                <p class="product-card-price">$14.500</p>
-              </div>
-              <div class="product-card-footer">
-                <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
-              </div>
-            </article>
-
-            <article class="product-card">
-              <a href="product.html">
-                <div class="product-card-image">
-                  <img src="assets/images/campera-jean.jpg" alt="Campera Jean Desgastada">
-                  <span class="product-card-badge out-of-stock">Sin stock</span>
-                </div>
-              </a>
-              <div class="product-card-body">
-                <p class="product-card-category">Camperas · Hombre</p>
-                <a href="product.html"><h3 class="product-card-name">Campera Jean Desgastada</h3></a>
-                <p class="product-card-price">$22.000</p>
-              </div>
-              <div class="product-card-footer">
-                <button class="btn btn-ghost btn-sm btn-full" disabled>Sin stock</button>
-              </div>
-            </article>
-
-            <article class="product-card">
-              <a href="product.html">
-                <div class="product-card-image">
-                  <img src="assets/images/pantalon-cargo.jpg" alt="Pantalón Cargo Gabardina">
-                  <button class="product-card-wishlist" type="button" title="Guardar en favoritos">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                  </button>
-                </div>
-              </a>
-              <div class="product-card-body">
-                <p class="product-card-category">Pantalones · Unisex</p>
-                <a href="product.html"><h3 class="product-card-name">Pantalón Cargo Gabardina</h3></a>
-                <p class="product-card-price">$18.500</p>
-              </div>
-              <div class="product-card-footer">
-                <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
-              </div>
-            </article>
-
-            <article class="product-card">
-              <a href="product.html">
-                <div class="product-card-image">
-                  <img src="assets/images/bermuda-lino.jpg" alt="Bermuda de Lino Premium">
-                  <button class="product-card-wishlist" type="button" title="Guardar en favoritos">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                  </button>
-                </div>
-              </a>
-              <div class="product-card-body">
-                <p class="product-card-category">Bermudas · Hombre</p>
-                <a href="product.html"><h3 class="product-card-name">Bermuda de Lino Premium</h3></a>
-                <p class="product-card-price">$11.200</p>
-              </div>
-              <div class="product-card-footer">
-                <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
-              </div>
-            </article>
-
-            <article class="product-card">
-              <a href="product.html">
-                <div class="product-card-image">
-                  <img src="assets/images/zapatillas-urban.jpg" alt="Zapatillas Urban Classic">
-                  <button class="product-card-wishlist" type="button" title="Guardar en favoritos">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                  </button>
-                </div>
-              </a>
-              <div class="product-card-body">
-                <p class="product-card-category">Calzado · Unisex</p>
-                <a href="product.html"><h3 class="product-card-name">Zapatillas Urban Classic</h3></a>
-                <p class="product-card-price">$31.500</p>
-              </div>
-              <div class="product-card-footer">
-                <a href="product.html" class="btn btn-outline btn-sm btn-full">Ver producto</a>
-              </div>
-            </article>
-
+            <p style="grid-column:1/-1;text-align:center;padding:32px;color:var(--color-text-muted)">Cargando...</p>
           </div>
         </section>
 

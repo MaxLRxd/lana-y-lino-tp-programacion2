@@ -3,15 +3,28 @@
 // ============================================================
 
 let allProducts = [];
+let favoriteIds = new Set();
 
 document.addEventListener('DOMContentLoaded', async () => {
-  await loadCategoriasFilter();
+  await Promise.all([loadCategoriasFilter(), loadFavoriteIds()]);
   await loadProducts();
   setupSearch();
   setupFilters();
   setupSort();
   setupClearFilters();
 });
+
+// ── Favoritos del usuario (para marcar el corazón relleno) ───
+async function loadFavoriteIds() {
+  if (!Api.isLoggedIn()) return;
+
+  try {
+    const user = Api.getUser();
+    const res  = await Api.get(`/api/obtenerFavoritos/${user.id}`);
+    const favs = res.payload || [];
+    favoriteIds = new Set(favs.map(f => Number(f.idProducto || f.id_producto)));
+  } catch { /* silencioso */ }
+}
 
 // ── Categorías del sidebar desde la BD ──────────────────────
 async function loadCategoriasFilter() {
@@ -157,17 +170,18 @@ function renderProducts(products) {
 
   grid.innerHTML = products.map(p => {
     const hasStock = p.stock !== 0;
-    const imagen   = p.ulrImagen || p.imagen || 'assets/images/placeholder.jpg';
+    const imagen   = firstImage(p.ulrImagen || p.imagen) || 'assests/default.png';
     const nombre   = p.producto  || p.nombre || '';
     const id       = p.idProducto || p.id_producto || p.id;
+    const isFav    = favoriteIds.has(Number(id));
     return `
       <article class="product-card">
         <a href="product.html?id=${id}">
           <div class="product-card-image">
-            <img src="${imagen}" alt="${nombre}">
+            <img src="${imagen}" alt="${nombre}" onerror="imgFallback(this)">
             ${!hasStock ? '<span class="product-card-badge out-of-stock">Sin stock</span>' : ''}
-            <button class="product-card-wishlist" type="button" title="Guardar en favoritos" data-id="${id}">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button class="product-card-wishlist${isFav ? ' is-active' : ''}" type="button" title="Guardar en favoritos" data-id="${id}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="${isFav ? 'var(--color-accent)' : 'none'}" stroke="${isFav ? 'var(--color-accent)' : 'currentColor'}" stroke-width="2">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
               </svg>
             </button>
@@ -193,15 +207,28 @@ function renderProducts(products) {
       e.preventDefault();
       e.stopPropagation();
       if (!Api.isLoggedIn()) { window.location.href = 'login.html'; return; }
-      const user = Api.getUser();
+
+      const user   = Api.getUser();
+      const id     = parseInt(btn.dataset.id);
+      const svg    = btn.querySelector('svg');
+      const isFav  = btn.classList.contains('is-active');
+
       try {
-        await Api.post('/api/agregarFavorito', {
-          id_producto: parseInt(btn.dataset.id),
-          id_usuario:  user.id,
-        });
-        btn.querySelector('svg').setAttribute('fill',   'var(--color-accent)');
-        btn.querySelector('svg').setAttribute('stroke', 'var(--color-accent)');
-        showToast('Agregado a favoritos ♥', 'success');
+        if (isFav) {
+          await Api.delete('/api/eliminarFavorito', { id_usuario: user.id, id_producto: id });
+          btn.classList.remove('is-active');
+          svg.setAttribute('fill',   'none');
+          svg.setAttribute('stroke', 'currentColor');
+          favoriteIds.delete(id);
+          showToast('Eliminado de favoritos', 'success');
+        } else {
+          await Api.post('/api/agregarFavorito', { id_producto: id, id_usuario: user.id });
+          btn.classList.add('is-active');
+          svg.setAttribute('fill',   'var(--color-accent)');
+          svg.setAttribute('stroke', 'var(--color-accent)');
+          favoriteIds.add(id);
+          showToast('Agregado a favoritos ♥', 'success');
+        }
       } catch (err) {
         showToast(err.message || 'Error', 'error');
       }

@@ -13,7 +13,68 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupAdminForm();
   setupSearch();
   setupNav();
+  setupTalleToggle();
+  setupPriceFormatter();
+  setupImageInput();
 });
+
+// ── Formato de precio (es-AR: punto de miles, coma decimal) ──
+function setupPriceFormatter() {
+  const input = document.getElementById('ad-precio');
+  if (!input) return;
+
+  input.addEventListener('input', () => {
+    const value = input.value.replace(/[^\d,]/g, '');
+    const [intRaw, decRaw] = value.split(',');
+
+    const intPart = (intRaw || '').replace(/^0+(?=\d)/, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    input.value = decRaw !== undefined ? `${intPart || '0'},${decRaw.slice(0, 2)}` : intPart;
+  });
+}
+
+function formatPriceInput(value) {
+  const num = Number(value);
+  return isNaN(num) ? '' : num.toLocaleString('es-AR', { maximumFractionDigits: 2 });
+}
+
+function parsePriceInput(value) {
+  return parseFloat((value || '').replace(/\./g, '').replace(',', '.'));
+}
+
+// ── Imagen del producto: guardar el archivo en /assets ───────
+function setupImageInput() {
+  const input = document.getElementById('ad-imagen');
+  const hint  = document.getElementById('ad-imagen-hint');
+  const form  = document.querySelector('.admin-form');
+  if (!input) return;
+
+  input.addEventListener('change', async () => {
+    delete form.dataset.savedImageName;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    if (!window.showSaveFilePicker) {
+      if (hint) hint.textContent = `Copiá manualmente "${file.name}" a la carpeta assets/ del proyecto.`;
+      return;
+    }
+
+    try {
+      const handle   = await window.showSaveFilePicker({ suggestedName: file.name });
+      const writable = await handle.createWritable();
+      await writable.write(file);
+      await writable.close();
+
+      form.dataset.savedImageName = handle.name;
+      if (hint) hint.textContent = `Imagen guardada como assets/${handle.name}`;
+      showToast('Imagen guardada en assets ✓', 'success');
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+      if (hint) hint.textContent = `Copiá manualmente "${file.name}" a la carpeta assets/ del proyecto.`;
+      showToast('No se pudo guardar la imagen automáticamente', 'error');
+    }
+  });
+}
 
 // ── Categorías en el select ───────────────────────────────────
 async function loadCategoriesSelect() {
@@ -21,13 +82,42 @@ async function loadCategoriesSelect() {
   if (!select) return;
 
   try {
-    const res    = await Api.get('/api/obtenerCategorias');
-    const cats   = res.payload || [];
-    const select = document.getElementById('ad-categoria');
-    if (!select) return;
+    const res  = await Api.get('/api/obtenerCategorias');
+    const cats = res.payload || [];
     select.innerHTML = `<option value="">Seleccioná...</option>` +
       cats.map(c => `<option value="${c.id_categoria || c.id}">${c.nombre}</option>`).join('');
   } catch { /* silencioso */ }
+}
+
+// ── Mostrar talles de ropa o de calzado según la categoría ────
+function updateTalleGroups(uncheckHidden) {
+  const select       = document.getElementById('ad-categoria');
+  const groupRopa    = document.querySelector('.size-check-group[data-tipo-talle="ropa"]');
+  const groupCalzado = document.querySelector('.size-check-group[data-tipo-talle="calzado"]');
+  if (!select || !groupRopa || !groupCalzado) return;
+
+  const nombreCategoria = select.options[select.selectedIndex]?.textContent.toLowerCase() || '';
+  const esCalzado = nombreCategoria.includes('calzado');
+
+  groupRopa.style.display    = esCalzado ? 'none' : '';
+  groupCalzado.style.display = esCalzado ? '' : 'none';
+
+  if (uncheckHidden) {
+    const hidden = esCalzado ? groupRopa : groupCalzado;
+    hidden.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+  }
+}
+
+function setupTalleToggle() {
+  const select = document.getElementById('ad-categoria');
+  if (!select) return;
+
+  select.addEventListener('change', () => updateTalleGroups(true));
+  document.querySelector('.admin-form')?.addEventListener('reset', () => {
+    setTimeout(() => updateTalleGroups(false), 0);
+  });
+
+  updateTalleGroups(false);
 }
 
 // ── Tabla de productos ────────────────────────────────────────
@@ -62,7 +152,7 @@ function renderTable(products) {
       <td>
         <div class="admin-table-product-cell">
           <div class="admin-table-thumb">
-            <img src="${p.ulrImagen || p.imagen || 'assets/images/placeholder.jpg'}" alt="${p.producto || p.nombre}">
+            <img src="${firstImage(p.ulrImagen || p.imagen) || 'assests/default.png'}" alt="${p.producto || p.nombre}" onerror="imgFallback(this)">
           </div>
           <span class="admin-table-product-name">${p.producto || p.nombre}</span>
         </div>
@@ -101,16 +191,26 @@ function enterEditMode(product) {
   // Rellenar campos
   setValue('ad-nombre',      product.producto || product.nombre || '');
   setValue('ad-descripcion', product.descripcion || '');
-  setValue('ad-precio',      product.precio      || '');
+  setValue('ad-precio',      formatPriceInput(product.precio));
   setValue('ad-genero',      (product.genero || '').toLowerCase());
   setValue('ad-color',       (product.color  || '').toLowerCase());
   setValue('ad-stock',       product.stock   || 0);
+
+  // La imagen actual se conserva salvo que se elija un archivo nuevo
+  form.dataset.editImagen = product.ulrImagen || product.imagen || '';
+  const imagenHint = document.getElementById('ad-imagen-hint');
+  if (imagenHint) {
+    imagenHint.textContent = form.dataset.editImagen
+      ? `Imagen actual: ${firstImage(form.dataset.editImagen)}`
+      : '';
+  }
 
   // Categoría
   const catSelect = document.getElementById('ad-categoria');
   if (catSelect && (product.idCategoria || product.id_categoria)) {
     catSelect.value = product.idCategoria || product.id_categoria;
   }
+  updateTalleGroups(false);
 
   // Marcar talles
   document.querySelectorAll('input[name="talles"]').forEach(cb => cb.checked = false);
@@ -144,12 +244,16 @@ function setupAdminForm() {
 
     const nombre      = document.getElementById('ad-nombre')?.value.trim();
     const descripcion = document.getElementById('ad-descripcion')?.value.trim();
-    const precio      = parseFloat(document.getElementById('ad-precio')?.value);
+    const precio      = parsePriceInput(document.getElementById('ad-precio')?.value);
     const genero      = document.getElementById('ad-genero')?.value;
     const idCategoria = parseInt(document.getElementById('ad-categoria')?.value);
     const color       = document.getElementById('ad-color')?.value;
     const stock       = parseInt(document.getElementById('ad-stock')?.value) || 0;
     const talles      = [...document.querySelectorAll('input[name="talles"]:checked')].map(i => i.value);
+    const imagenFile  = document.getElementById('ad-imagen')?.files?.[0];
+    const imagen      = imagenFile
+      ? `assets/${form.dataset.savedImageName || imagenFile.name}`
+      : (form.dataset.editImagen || '');
 
     if (!nombre || isNaN(precio) || precio <= 0 || !genero || !idCategoria || !color) {
       showToast('Completá todos los campos obligatorios', 'error');
@@ -175,22 +279,20 @@ function setupAdminForm() {
         const res = await Api.post('/api/cargarProducto', {
           nombre, descripcion, precio, genero,
           id_categoria: idCategoria,
-          imagen: '',
+          imagen,
         });
 
         const productId = res.payload?.[0]?.idProducto || res.insertId;
         console.log('Producto creado ID:', productId, 'Talles:', talles);
 
-        // Crear entradas de inventario (una por talle)
+        // Crear entradas de inventario (una por talle, de forma secuencial)
         if (productId && talles.length) {
-          try {
-            await Promise.all(
-              talles.map(talle =>
-                Api.post('/api/crearInventario', { talle, color, stock, id_producto: productId })
-              )
-            );
-          } catch (invErr) {
-            showToast('Producto creado pero hubo un error al guardar talles/stock', 'error');
+          for (const talle of talles) {
+            try {
+              await Api.post('/api/crearInventario', { talle, color, stock, id_producto: productId });
+            } catch (invErr) {
+              showToast(`Hubo un error al guardar el talle ${talle}`, 'error');
+            }
           }
         }
 
@@ -217,10 +319,13 @@ function setupAdminForm() {
 function exitEditMode(form) {
   delete form.dataset.editId;
   delete form.dataset.editInventarioId;
+  delete form.dataset.editImagen;
   const title = document.querySelector('.admin-card-title');
   const btn   = form.querySelector('button[type="submit"]');
+  const hint  = document.getElementById('ad-imagen-hint');
   if (title) title.textContent = 'Nuevo producto';
   if (btn)   btn.textContent   = 'Guardar producto';
+  if (hint)  hint.textContent  = '';
 }
 
 // ── Búsqueda en tabla ─────────────────────────────────────────

@@ -15,6 +15,23 @@
   });
 })();
 
+// ── Fallback para imágenes rotas ─────────────────────────────
+const IMG_FALLBACK = 'assests/default.png';
+
+function imgFallback(img) {
+  img.onerror = null;
+  img.src = IMG_FALLBACK;
+}
+
+// ── Imágenes de producto: vienen separadas por ";" ───────────
+function parseImages(value) {
+  return (value || '').split(';').map(s => s.trim()).filter(Boolean);
+}
+
+function firstImage(value) {
+  return parseImages(value)[0] || '';
+}
+
 // ── Toast notification ──────────────────────────────────────
 function showToast(message, type = 'success') {
   let container = document.getElementById('toast-container');
@@ -117,7 +134,20 @@ async function loadDropdownCategories() {
   } catch { /* silencioso */ }
 }
 
+// ── Menú hamburguesa (mobile) ───────────────────────────────
+function setupNavToggle() {
+  const header = document.querySelector('.header');
+  const toggle = document.querySelector('.nav-toggle');
+  if (!header || !toggle) return;
+
+  toggle.addEventListener('click', () => {
+    const open = header.classList.toggle('nav-open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+
 // ── Init ────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   updateHeaderSession();
+  setupNavToggle();
 });

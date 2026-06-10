@@ -66,12 +66,12 @@ function renderFavorites(products) {
     `${products.length} ${products.length === 1 ? 'producto guardado' : 'productos guardados'}`;
 
   grid.innerHTML = products.map(p => {
-    const imagen = p.imagen || 'assets/images/placeholder.jpg';
+    const imagen = firstImage(p.imagen) || 'assests/default.png';
     const precio = `$${Number(p.precio || 0).toLocaleString('es-AR')}`;
     return `
       <article class="fav-card" data-id="${p.id}">
         <a href="product.html?id=${p.id}" class="fav-card-image">
-          <img src="${imagen}" alt="${p.nombre}" loading="lazy">
+          <img src="${imagen}" alt="${p.nombre}" loading="lazy" onerror="imgFallback(this)">
         </a>
         <div class="fav-card-body">
           <h3 class="fav-card-name">${p.nombre}</h3>

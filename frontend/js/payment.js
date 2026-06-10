@@ -37,7 +37,7 @@ function renderOrderSummary(items) {
   container.innerHTML = items.map(item => `
     <div class="payment-order-item">
       <div class="payment-order-item-img">
-        <img src="${item.imagen || 'assets/images/placeholder.jpg'}" alt="${item.nombre}">
+        <img src="${firstImage(item.imagen) || 'assests/default.png'}" alt="${item.nombre}" onerror="imgFallback(this)">
       </div>
       <div class="payment-order-item-name">
         ${item.nombre}
@@ -137,6 +137,18 @@ function setupPayButton() {
       const user = Api.getUser();
       const res = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
       const items = res.payload || [];
+
+      // Descontar stock de cada producto comprado
+      await Promise.allSettled(
+        items
+          .filter(item => typeof item.stock === 'number')
+          .map(item =>
+            Api.put('/api/modificarStock', {
+              stock: Math.max(0, item.stock - 1),
+              id_inventario: item.idInventario,
+            })
+          )
+      );
 
       // Vaciar carrito
       await Promise.allSettled(

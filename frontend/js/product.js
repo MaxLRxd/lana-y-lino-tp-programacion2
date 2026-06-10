@@ -7,8 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await loadProduct(id);
   setupAddToCart();
-  setupWishlist(id);
-  setupGallery();
+  await setupWishlist(id);
 });
 
 // ── Carga del producto ───────────────────────────────────────
@@ -68,12 +67,8 @@ function renderProduct(p) {
   const bcLast = document.querySelector('.breadcrumb span:last-child');
   if (bcLast) bcLast.textContent = p.nombre;
 
-  // Imagen principal
-  const mainImg = document.querySelector('.product-gallery-main img');
-  if (mainImg) {
-    mainImg.src = p.imagen || 'assets/images/placeholder.jpg';
-    mainImg.alt = p.nombre;
-  }
+  // Galería de imágenes
+  renderGallery(parseImages(p.imagen), p.nombre);
 
   // Textos
   setText('.product-info-category', [p.categoria, p.genero, p.color].filter(Boolean).join(' · '));
@@ -167,19 +162,30 @@ function renderCuotas(precio) {
 }
 
 // ── Galería de miniaturas ────────────────────────────────────
-function setupGallery() {
-  const mainImg = document.querySelector('.product-gallery-main img');
-  const thumbs  = document.querySelectorAll('.product-gallery-thumb');
+function renderGallery(imagenes, nombre) {
+  const mainImg     = document.querySelector('.product-gallery-main img');
+  const thumbsBox   = document.querySelector('.product-gallery-thumbs');
 
-  thumbs.forEach(thumb => {
+  const principal = imagenes[0] || 'assests/default.png';
+  if (mainImg) {
+    mainImg.src = principal;
+    mainImg.alt = nombre;
+  }
+
+  if (!thumbsBox) return;
+  thumbsBox.innerHTML = '';
+  if (imagenes.length < 2) return;
+
+  imagenes.forEach((src, i) => {
+    const thumb = document.createElement('div');
+    thumb.className = `product-gallery-thumb ${i === 0 ? 'active' : ''}`;
+    thumb.innerHTML = `<img src="${src}" alt="${nombre}" onerror="imgFallback(this)">`;
     thumb.addEventListener('click', () => {
-      thumbs.forEach(t => t.classList.remove('active'));
+      thumbsBox.querySelectorAll('.product-gallery-thumb').forEach(t => t.classList.remove('active'));
       thumb.classList.add('active');
-      if (mainImg) {
-        const thumbImg = thumb.querySelector('img');
-        if (thumbImg) mainImg.src = thumbImg.src;
-      }
+      if (mainImg) mainImg.src = src;
     });
+    thumbsBox.appendChild(thumb);
   });
 }
 
@@ -226,27 +232,52 @@ function setupAddToCart() {
 }
 
 // ── Favoritos ─────────────────────────────────────────────────
-function setupWishlist(productId) {
+async function setupWishlist(productId) {
   const btn = document.getElementById('btn-wishlist');
   if (!btn) return;
 
-  let added = false;
+  const id = parseInt(productId);
+  let isFavorite = false;
+
+  if (Api.isLoggedIn()) {
+    try {
+      const user = Api.getUser();
+      const res  = await Api.get(`/api/obtenerFavoritos/${user.id}`);
+      const favs = res.payload || [];
+      isFavorite = favs.some(f => Number(f.idProducto || f.id_producto) === id);
+    } catch { /* silencioso */ }
+  }
+
+  setWishlistState(btn, isFavorite);
+
   btn.addEventListener('click', async () => {
     if (!Api.isLoggedIn()) { window.location.href = 'login.html'; return; }
-    if (added) { showToast('Ya está en favoritos', 'success'); return; }
 
     const user = Api.getUser();
     try {
-      await Api.post('/api/agregarFavorito', {
-        id_producto: parseInt(productId),
-        id_usuario:  user.id,
-      });
-      added = true;
-      btn.querySelector('svg').setAttribute('fill',   'var(--color-accent)');
-      btn.querySelector('svg').setAttribute('stroke', 'var(--color-accent)');
-      showToast('Agregado a favoritos ♥', 'success');
+      if (isFavorite) {
+        await Api.delete('/api/eliminarFavorito', { id_usuario: user.id, id_producto: id });
+        isFavorite = false;
+        setWishlistState(btn, false);
+        showToast('Eliminado de favoritos', 'success');
+      } else {
+        await Api.post('/api/agregarFavorito', { id_producto: id, id_usuario: user.id });
+        isFavorite = true;
+        setWishlistState(btn, true);
+        showToast('Agregado a favoritos ♥', 'success');
+      }
     } catch (err) {
-      showToast(err.message || 'Error al agregar favorito', 'error');
+      showToast(err.message || 'Error al actualizar favoritos', 'error');
     }
   });
+}
+
+function setWishlistState(btn, active) {
+  const svg = btn.querySelector('svg');
+  if (svg) {
+    svg.setAttribute('fill',   active ? 'var(--color-accent)' : 'none');
+    svg.setAttribute('stroke', active ? 'var(--color-accent)' : 'currentColor');
+  }
+  btn.classList.toggle('is-active', active);
+  btn.title = active ? 'Quitar de favoritos' : 'Agregar a favoritos';
 }

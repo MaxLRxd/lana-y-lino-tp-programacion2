@@ -61,11 +61,11 @@ function renderCart(items) {
 
 function buildCartItem(item) {
   const precio = Number(item.precio || 0).toLocaleString('es-AR');
-  const imagen = item.imagen || 'assets/images/placeholder.jpg';
+  const imagen = firstImage(item.imagen) || 'assests/default.png';
   return `
     <div class="cart-item" data-inventario="${item.id_inventario}">
       <div class="cart-item-image">
-        <img src="${imagen}" alt="${item.nombre}">
+        <img src="${imagen}" alt="${item.nombre}" onerror="imgFallback(this)">
       </div>
       <div>
         <p class="cart-item-name">${item.nombre}</p>

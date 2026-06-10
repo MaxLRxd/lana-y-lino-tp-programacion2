@@ -20,6 +20,9 @@
 
     <header class="header">
       <div class="header-inner">
+        <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
         <div class="header-left">
           <div class="header-search">
             <input type="text" placeholder="Buscar productos...">
@@ -107,7 +110,7 @@
             JS enables it when all required fields are complete.
           -->
           <button class="btn btn-primary btn-full btn-lg" type="button" id="btn-pay" disabled>
-            Pagar $23.400
+            Pagar
           </button>
         </div>
 
@@ -115,31 +118,12 @@
         <aside class="cart-summary">
           <p class="cart-summary-title">Tu pedido</p>
           <div class="payment-order-items">
-            <div class="payment-order-item">
-              <div class="payment-order-item-img">
-                <img src="assets/images/remera-clasica.jpg" alt="Remera Clásica">
-              </div>
-              <div class="payment-order-item-name">
-                Remera Clásica Algodón
-                <div class="payment-order-item-meta">Talle: M · Negro × 1</div>
-              </div>
-              <p class="payment-order-item-price">$8.900</p>
-            </div>
-            <div class="payment-order-item">
-              <div class="payment-order-item-img">
-                <img src="assets/images/buzo-oversize.jpg" alt="Buzo Oversize">
-              </div>
-              <div class="payment-order-item-name">
-                Buzo Oversize Frisa Interior
-                <div class="payment-order-item-meta">Talle: L · Beige × 1</div>
-              </div>
-              <p class="payment-order-item-price">$14.500</p>
-            </div>
+            <p style="text-align:center;padding:32px;color:var(--color-text-muted)">Cargando...</p>
           </div>
           <hr class="divider">
-          <div class="summary-row"><span>Subtotal</span><span>$23.400</span></div>
+          <div class="summary-row"><span>Subtotal</span><span>$0</span></div>
           <div class="summary-row"><span>Envío</span><span>Gratis</span></div>
-          <div class="summary-total"><span>Total</span><span>$23.400</span></div>
+          <div class="summary-total"><span>Total</span><span>$0</span></div>
         </aside>
 
       </div>
