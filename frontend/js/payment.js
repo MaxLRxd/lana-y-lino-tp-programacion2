@@ -138,6 +138,23 @@ function setupPayButton() {
       const res = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
       const items = res.payload || [];
 
+      // Descontar stock por cada item comprado
+      for (const item of items) {
+        try {
+          const invRes = await Api.get(`/api/obtenerDatosProducto/${item.idProducto}`, false);
+          const rows = invRes.payload || [];
+          const invRow = rows.find(r => r.idInventario === item.idInventario);
+          if (invRow && invRow.stock > 0) {
+            await Api.put('/api/modificarStock', {
+              stock: invRow.stock - 1,
+              id_inventario: item.idInventario,
+            });
+          }
+        } catch {
+          console.warn('No se pudo actualizar stock para inventario', item.idInventario);
+        }
+      }
+
       // Vaciar carrito
       await Promise.allSettled(
         items.map(item =>

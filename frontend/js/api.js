@@ -32,6 +32,9 @@ const Api = {
     if (!res.ok) {
       throw new Error(data.message || data.error || `Error ${res.status}`);
     }
+    if (data.codigo !== undefined && data.codigo !== 200) {
+      throw new Error(data.mensaje || data.error || `Error código ${data.codigo}`);
+    }
     return data;
   },
 

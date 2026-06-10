@@ -200,6 +200,20 @@ function setupTalleToggle() {
 }
 
 // ── Tabla de productos ────────────────────────────────────────
+async function enrichProductsWithInventory(products) {
+  await Promise.all(products.map(async (p) => {
+    const id = p.idProducto || p.id_producto || p.id;
+    if (!id) return;
+    try {
+      const invRes = await Api.get(`/api/obtenerDatosProducto/${id}`, false);
+      const rows = invRes.payload || [];
+      if (!rows.length) return;
+      p.color = rows[0].color || '';
+      p.stock = rows.reduce((s, r) => s + (r.stock || 0), 0);
+    } catch { /* producto sin inventario */ }
+  }));
+}
+
 async function loadProductsTable(query = '') {
   const tbody = document.querySelector('.admin-table tbody');
   if (!tbody) return;
@@ -208,6 +222,7 @@ async function loadProductsTable(query = '') {
   try {
     const res = await Api.get('/api/obtenerProductos', false);
     let products = res.payload || [];
+    await enrichProductsWithInventory(products);
     if (query) {
       products = products.filter(p => (p.producto || p.nombre)?.toLowerCase().includes(query.toLowerCase()));
     }
@@ -252,15 +267,19 @@ function renderTable(products) {
   ).join('');
 
   tbody.querySelectorAll('.btn-edit').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       const product = JSON.parse(btn.dataset.product);
-      enterEditMode(product);
+      try {
+        await enterEditMode(product);
+      } catch (err) {
+        showToast(err.message || 'Error al entrar en modo edición', 'error');
+      }
     });
   });
 }
 
 // ── Modo edición ──────────────────────────────────────────────
-function enterEditMode(product) {
+async function enterEditMode(product) {
   const form  = document.querySelector('.admin-form');
   const title = document.querySelector('.admin-card-title');
   const btn   = form?.querySelector('button[type="submit"]');
@@ -273,7 +292,6 @@ function enterEditMode(product) {
   setValue('ad-precio',      formatPriceInput(product.precio));
   setValue('ad-genero',      (product.genero || '').toLowerCase());
   setValue('ad-color',       (product.color  || '').toLowerCase());
-  setValue('ad-stock',       product.stock   || 0);
 
   // Imágenes: rellenar los inputs con las URLs existentes
   setImageUrls(product.ulrImagen || product.imagen || '');
@@ -285,15 +303,32 @@ function enterEditMode(product) {
   }
   updateTalleGroups(false);
 
-  // Marcar talles
-  document.querySelectorAll('input[name="talles"]').forEach(cb => cb.checked = false);
-  (product.talles || []).forEach(t => {
-    const cb = document.querySelector(`input[name="talles"][value="${t}"]`);
-    if (cb) cb.checked = true;
-  });
-
   form.dataset.editId           = product.idProducto || product.id;
-  form.dataset.editInventarioId = product.id_inventario || '';
+  form.dataset.editInventarioId = '';
+
+  // Traer datos de inventario (color, stock, talles, id_inventario)
+  const invRes = await Api.get(`/api/obtenerDatosProducto/${form.dataset.editId}`, false).catch(() => null);
+  const invRows = invRes?.payload || [];
+
+  if (invRows.length) {
+    setValue('ad-stock', invRows[0].stock ?? 0);
+    setValue('ad-color', (invRows[0].color || '').toLowerCase());
+    form.dataset.editInventarioId = invRows[0].idInventario || '';
+
+    // Marcar talles disponibles
+    document.querySelectorAll('input[name="talles"]').forEach(cb => cb.checked = false);
+    invRows.forEach(r => {
+      const cb = document.querySelector(`input[name="talles"][value="${r.talle}"]`);
+      if (cb) cb.checked = true;
+    });
+  } else {
+    setValue('ad-stock', product.stock || 0);
+    document.querySelectorAll('input[name="talles"]').forEach(cb => cb.checked = false);
+    (product.talles || []).forEach(t => {
+      const cb = document.querySelector(`input[name="talles"][value="${t}"]`);
+      if (cb) cb.checked = true;
+    });
+  }
 
   if (title) title.textContent = `Editando: ${product.producto || product.nombre}`;
   if (btn)   btn.textContent   = 'Guardar cambios';
@@ -336,13 +371,14 @@ function setupAdminForm() {
 
       if (form.dataset.editId) {
         // ── EDITAR: solo modificar stock por ahora (API limitada) ──
-        if (form.dataset.editInventarioId) {
+        const invId = parseInt(form.dataset.editInventarioId);
+        if (!isNaN(invId) && invId >= 0) {
           await Api.put('/api/modificarStock', {
             stock,
-            id_inventario: parseInt(form.dataset.editInventarioId),
+            id_inventario: invId,
           });
+          showToast('Producto actualizado ✓', 'success');
         }
-        showToast('Producto actualizado ✓', 'success');
         exitEditMode(form);
       } else {
         // ── CREAR ──
