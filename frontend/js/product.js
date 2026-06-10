@@ -203,6 +203,9 @@ function setupAddToCart() {
     const user = Api.getUser();
     const idInventario = parseInt(talleInput.value);
 
+    const cuotaRadio = document.querySelector('input[name="cuotas"]:checked');
+    const selectedCuotas = cuotaRadio ? parseInt(cuotaRadio.id.replace('c', '')) : 1;
+
     // Verificar si ya está en el carrito
     const cartRes = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
     const cartItems = cartRes.payload || [];
@@ -220,6 +223,9 @@ function setupAddToCart() {
         id_inventario: idInventario,
         id_usuario:    user.id,
       });
+      const cartCuotas = JSON.parse(localStorage.getItem('cart_cuotas') || '{}');
+      cartCuotas[idInventario] = selectedCuotas;
+      localStorage.setItem('cart_cuotas', JSON.stringify(cartCuotas));
       showToast('¡Producto agregado al carrito! 🛒', 'success');
       updateCartBadge();
     } catch (err) {

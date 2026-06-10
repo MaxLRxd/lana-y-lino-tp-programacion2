@@ -79,7 +79,8 @@
   outline: none;
   color: var(--color-text);
   font-size: 0.875rem;
-  width: 170px;
+  width: 100%;
+  max-width: 170px;
 }
 
 .header-search input::placeholder {
@@ -244,12 +245,16 @@
   }
 
   /* El botón de sesión se fija en la fila 1, fuera del menú desplegable */
+  .btn-session,
+  .btn-admin {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
   .btn-session {
     position: absolute;
     top: calc((var(--header-height) - 44px) / 2);
     right: 0;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
   }
 }

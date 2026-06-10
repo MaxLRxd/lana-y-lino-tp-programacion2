@@ -14,6 +14,7 @@ async function loadCart() {
   container.innerHTML = `<p style="text-align:center;padding:32px;color:var(--color-text-muted)">Cargando...</p>`;
 
   try {
+    const cartCuotas = JSON.parse(localStorage.getItem('cart_cuotas') || '{}');
     const res = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
     const items = (res.payload || []).map(i => ({
       id_inventario: i.idInventario,
@@ -22,6 +23,7 @@ async function loadCart() {
       imagen:        i.urlImagen,
       talle:         i.talle,
       color:         i.color,
+      cuotas:        cartCuotas[i.idInventario] || 1,
     }));
     renderCart(items);
   } catch {
@@ -55,13 +57,20 @@ function renderCart(items) {
     );
   });
 
-  const total = items.reduce((s, i) => s + Number(i.precio || 0), 0);
+  const total = items.reduce((s, i) => s + Api.calcularTotalConCuotas(Number(i.precio || 0), i.cuotas || 1), 0);
   updateSummary(total);
 }
 
 function buildCartItem(item) {
-  const precio = Number(item.precio || 0).toLocaleString('es-AR');
-  const imagen = firstImage(item.imagen) || 'assests/default.png';
+  const precioBase = Number(item.precio || 0);
+  const cuotas    = item.cuotas || 1;
+  const total     = Api.calcularTotalConCuotas(precioBase, cuotas);
+  const valorCuota = Api.calcularValorCuota(precioBase, cuotas);
+  const precioStr = total.toLocaleString('es-AR');
+  const imagen    = firstImage(item.imagen) || 'assests/default.png';
+  const cuotaHtml = cuotas > 1
+    ? `<p class="cart-item-cuotas">${cuotas} cuotas de $${valorCuota.toLocaleString('es-AR')} · Total financiado: $${precioStr}</p>`
+    : '';
   return `
     <div class="cart-item" data-inventario="${item.id_inventario}">
       <div class="cart-item-image">
@@ -72,7 +81,8 @@ function buildCartItem(item) {
         <p class="cart-item-meta">
           Talle: ${item.talle || '-'} &nbsp;·&nbsp; Color: ${item.color || '-'}
         </p>
-        <p class="cart-item-price">$${precio}</p>
+        <p class="cart-item-price">$${precioStr}</p>
+        ${cuotaHtml}
       </div>
       <div class="cart-item-actions">
         <button class="btn btn-danger btn-sm btn-remove" type="button"
@@ -90,6 +100,9 @@ async function removeItem(idInventario) {
       id_usuario:    user.id,
       id_inventario: idInventario,
     });
+    const cartCuotas = JSON.parse(localStorage.getItem('cart_cuotas') || '{}');
+    delete cartCuotas[idInventario];
+    localStorage.setItem('cart_cuotas', JSON.stringify(cartCuotas));
     showToast('Producto eliminado del carrito', 'success');
     await loadCart();
     updateCartBadge();

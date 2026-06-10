@@ -69,6 +69,12 @@
   color: var(--color-accent);
 }
 
+.cart-item-cuotas {
+  font-size: 0.775rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
 .cart-item-actions {
   display: flex;
   flex-direction: column;
@@ -250,6 +256,13 @@
 .payment-order-item-meta {
   font-size: 0.75rem;
   color: var(--color-text-muted);
+}
+
+.payment-order-item-cuotas {
+  font-size: 0.7rem;
+  color: var(--color-accent);
+  font-weight: 600;
+  margin-top: 2px;
 }
 
 .payment-order-item-price {
@@ -626,6 +639,14 @@
   .admin-table {
     min-width: 640px;
   }
+
+  .payment-methods {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cart-summary-title {
+    font-size: 0.95rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -642,6 +663,10 @@
     grid-column: 1 / -1;
     flex-direction: row;
     justify-content: flex-end;
+  }
+
+  .cart-item-actions .btn {
+    min-height: 44px;
   }
 
   .payment-methods {

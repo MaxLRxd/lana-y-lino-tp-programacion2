@@ -42,4 +42,14 @@ const Api = {
   post(endpoint, body, requiresAuth = true) { return this.request('POST',   endpoint, body, requiresAuth); },
   put(endpoint, body)                       { return this.request('PUT',    endpoint, body, true); },
   delete(endpoint, body)                    { return this.request('DELETE', endpoint, body, true); },
+
+  CUOTA_RATES: { 1: 1, 3: 1, 6: 1.15, 9: 1.18, 12: 1.22 },
+
+  calcularTotalConCuotas(precioBase, n) {
+    return Math.ceil(precioBase * (this.CUOTA_RATES[n] || 1));
+  },
+
+  calcularValorCuota(precioBase, n) {
+    return Math.ceil(this.calcularTotalConCuotas(precioBase, n) / n);
+  },
 };

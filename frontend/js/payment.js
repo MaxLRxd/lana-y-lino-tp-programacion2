@@ -14,13 +14,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadPaymentItems() {
   const user = Api.getUser();
   try {
+    const cartCuotas = JSON.parse(localStorage.getItem('cart_cuotas') || '{}');
     const res = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
     const items = (res.payload || []).map(i => ({
+      id_inventario: i.idInventario,
       nombre:  i.producto,
       precio:  i.precio,
       imagen:  i.urlImagen,
       talle:   i.talle,
       color:   i.color,
+      cuotas:  cartCuotas[i.idInventario] || 1,
     }));
     renderOrderSummary(items);
   } catch {
@@ -32,9 +35,19 @@ function renderOrderSummary(items) {
   const container = document.querySelector('.payment-order-items');
   if (!container) return;
 
-  const total = items.reduce((s, i) => s + Number(i.precio || 0), 0);
+  const total = items.reduce((s, i) => {
+    const n = i.cuotas || 1;
+    return s + Api.calcularTotalConCuotas(Number(i.precio || 0), n);
+  }, 0);
 
-  container.innerHTML = items.map(item => `
+  container.innerHTML = items.map(item => {
+    const n = item.cuotas || 1;
+    const totalItem = Api.calcularTotalConCuotas(Number(item.precio), n);
+    const valorCuota = Api.calcularValorCuota(Number(item.precio), n);
+    const cuotaHtml = n > 1
+      ? `<div class="payment-order-item-cuotas">${n} cuotas de $${valorCuota.toLocaleString('es-AR')}</div>`
+      : '';
+    return `
     <div class="payment-order-item">
       <div class="payment-order-item-img">
         <img src="${firstImage(item.imagen) || 'assests/default.png'}" alt="${item.nombre}" onerror="imgFallback(this)">
@@ -44,10 +57,11 @@ function renderOrderSummary(items) {
         <div class="payment-order-item-meta">
           Talle: ${item.talle || '-'} &nbsp;·&nbsp; ${item.color || '-'}
         </div>
+        ${cuotaHtml}
       </div>
-      <p class="payment-order-item-price">$${Number(item.precio).toLocaleString('es-AR')}</p>
-    </div>`
-  ).join('');
+      <p class="payment-order-item-price">$${totalItem.toLocaleString('es-AR')}</p>
+    </div>`;
+  }).join('');
 
   // Totales
   const formatted = `$${total.toLocaleString('es-AR')}`;
@@ -165,6 +179,7 @@ function setupPayButton() {
         )
       );
 
+      localStorage.removeItem('cart_cuotas');
       const layout = document.querySelector('.payment-layout');
       if (layout) {
         layout.innerHTML = `

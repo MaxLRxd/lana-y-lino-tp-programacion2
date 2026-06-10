@@ -636,6 +636,10 @@
     flex-wrap: wrap;
     gap: var(--sp-sm);
   }
+
+  .sort-select {
+    min-height: 44px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -644,7 +648,7 @@
   }
 
   .product-gallery-thumbs {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .product-info-name {
@@ -653,5 +657,18 @@
 
   .product-info-price {
     font-size: 1.4rem;
+  }
+
+  .cuotas-buttons label {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+
+  .product-detail-layout {
+    padding: 0 var(--sp-md) var(--sp-lg);
+  }
+
+  .breadcrumb {
+    padding: var(--sp-sm) var(--sp-md);
   }
 }
