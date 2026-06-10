@@ -67,12 +67,28 @@ async function loadProducts() {
   try {
     const res = await Api.get('/api/obtenerProductos', false);
     allProducts = res.payload || res || [];
+    await enrichProductsWithColors();
     updateFilterCounts(allProducts);
     applyFilters();
   } catch {
     document.querySelector('.product-grid').innerHTML =
       `<div class="alert alert-error" style="grid-column:1/-1;">Error al cargar productos</div>`;
   }
+}
+
+async function enrichProductsWithColors() {
+  await Promise.all(allProducts.map(async (p) => {
+    const id = p.idProducto || p.id_producto || p.id;
+    if (!id) return;
+    try {
+      const invRes = await Api.get(`/api/obtenerDatosProducto/${id}`, false);
+      const rows = invRes.payload || [];
+      if (!rows.length) return;
+      p.color = rows[0].color || '';
+      const totalStock = rows.reduce((s, r) => s + (r.stock || 0), 0);
+      p.stock = totalStock;
+    } catch { /* producto sin inventario */ }
+  }));
 }
 
 // ── Actualizar contadores de filtros desde la BD ─────────────
@@ -272,9 +288,18 @@ function setupSort() {
     if (order === 'precio-asc')  sorted.sort((a, b) => a.precio - b.precio);
     if (order === 'precio-desc') sorted.sort((a, b) => b.precio - a.precio);
 
-    // Re-aplicar filtros activos sobre el array ordenado
-    allProducts = sorted;
-    applyFilters();
+    let filtered = sorted;
+    const genChecked = getChecked('input[name="genero"]:checked');
+    if (genChecked.length) filtered = filtered.filter(p => genChecked.includes(p.genero?.toLowerCase()));
+    const catChecked = getChecked('input[name="categoria"]:checked');
+    if (catChecked.length) filtered = filtered.filter(p => catChecked.includes(p.categoria?.toLowerCase()));
+    const colChecked = getChecked('input[name="color"]:checked');
+    if (colChecked.length) filtered = filtered.filter(p => colChecked.includes(p.color?.toLowerCase()));
+    const query = document.querySelector('.header-search input')?.value?.toLowerCase().trim();
+    if (query) filtered = filtered.filter(p => p.producto?.toLowerCase().includes(query));
+
+    renderProducts(filtered);
+    updateCount(filtered.length);
   });
 }
 

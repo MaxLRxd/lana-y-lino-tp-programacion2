@@ -138,18 +138,6 @@ function setupPayButton() {
       const res = await Api.get(`/api/obtenerProductosCarrito/${user.id}`);
       const items = res.payload || [];
 
-      // Descontar stock de cada producto comprado
-      await Promise.allSettled(
-        items
-          .filter(item => typeof item.stock === 'number')
-          .map(item =>
-            Api.put('/api/modificarStock', {
-              stock: Math.max(0, item.stock - 1),
-              id_inventario: item.idInventario,
-            })
-          )
-      );
-
       // Vaciar carrito
       await Promise.allSettled(
         items.map(item =>

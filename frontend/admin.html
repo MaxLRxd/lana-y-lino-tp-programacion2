@@ -79,13 +79,18 @@
                 <label class="form-label" for="ad-descripcion">Descripción</label>
                 <textarea class="form-textarea" id="ad-descripcion" placeholder="Descripción detallada del producto..." required></textarea>
               </div>
-              <div class="form-group">
-                <label class="form-label" for="ad-imagen">Imagen</label>
-                <input class="form-input" type="file" id="ad-imagen" accept="image/*">
-                <small style="color:var(--color-text-muted)">
-                  Seleccioná la imagen del producto: se va a pedir guardarla en la carpeta assets/ del proyecto.
+              <div class="form-group" id="imagenes-group">
+                <span class="form-label">Imágenes (URLs)</span>
+                <div class="image-url-list" id="image-url-list">
+                  <div class="image-url-row">
+                    <input class="form-input" type="url" placeholder="https://ejemplo.com/imagen-principal.jpg">
+                    <button type="button" class="btn btn-danger btn-sm btn-remove-url" style="display:none" title="Quitar imagen">✕</button>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" id="btn-add-image" style="margin-top:var(--sp-xs);">+ Agregar otra imagen</button>
+                <small style="color:var(--color-text-muted);display:block;margin-top:var(--sp-xs);">
+                  Pegá las URLs de las imágenes. La primera será la imagen principal.
                 </small>
-                <small id="ad-imagen-hint" style="color:var(--color-text-muted)"></small>
               </div>
               <div class="admin-form-row-3">
                 <div class="form-group">

@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupNav();
   setupTalleToggle();
   setupPriceFormatter();
-  setupImageInput();
+  setupImageUrls();
 });
 
 // ── Formato de precio (es-AR: punto de miles, coma decimal) ──
@@ -42,38 +42,117 @@ function parsePriceInput(value) {
   return parseFloat((value || '').replace(/\./g, '').replace(',', '.'));
 }
 
-// ── Imagen del producto: guardar el archivo en /assets ───────
-function setupImageInput() {
-  const input = document.getElementById('ad-imagen');
-  const hint  = document.getElementById('ad-imagen-hint');
-  const form  = document.querySelector('.admin-form');
-  if (!input) return;
+// ── Imágenes del producto: URLs múltiples ────────────────────
+function setupImageUrls() {
+  const list  = document.getElementById('image-url-list');
+  const addBtn = document.getElementById('btn-add-image');
+  if (!list) return;
 
-  input.addEventListener('change', async () => {
-    delete form.dataset.savedImageName;
-    const file = input.files?.[0];
-    if (!file) return;
+  function updateRemoveButtons() {
+    const rows = list.querySelectorAll('.image-url-row');
+    rows.forEach((row, i) => {
+      const btn = row.querySelector('.btn-remove-url');
+      if (btn) btn.style.display = rows.length > 1 ? '' : 'none';
+    });
+  }
 
-    if (!window.showSaveFilePicker) {
-      if (hint) hint.textContent = `Copiá manualmente "${file.name}" a la carpeta assets/ del proyecto.`;
-      return;
+  function updatePreview(input) {
+    const row = input.closest('.image-url-row');
+    let preview = row.querySelector('.image-url-preview');
+    const url = input.value.trim();
+    if (url && (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:'))) {
+      if (!preview) {
+        preview = document.createElement('img');
+        preview.className = 'image-url-preview';
+        preview.onerror = () => { preview.style.display = 'none'; };
+        row.insertBefore(preview, row.querySelector('.btn-remove-url'));
+      }
+      preview.style.display = '';
+      preview.src = url;
+    } else if (preview) {
+      preview.style.display = 'none';
     }
+  }
 
-    try {
-      const handle   = await window.showSaveFilePicker({ suggestedName: file.name });
-      const writable = await handle.createWritable();
-      await writable.write(file);
-      await writable.close();
+  function createRow(url = '') {
+    const row = document.createElement('div');
+    row.className = 'image-url-row';
+    row.innerHTML = `
+      <input class="form-input" type="url" placeholder="https://ejemplo.com/imagen.jpg" value="${url}">
+      <button type="button" class="btn btn-danger btn-sm btn-remove-url" title="Quitar imagen">✕</button>
+    `;
+    const input = row.querySelector('input');
+    input.addEventListener('input', () => updatePreview(input));
+    row.querySelector('.btn-remove-url').addEventListener('click', () => {
+      row.remove();
+      updateRemoveButtons();
+    });
+    if (url) setTimeout(() => updatePreview(input), 0);
+    return row;
+  }
 
-      form.dataset.savedImageName = handle.name;
-      if (hint) hint.textContent = `Imagen guardada como assets/${handle.name}`;
-      showToast('Imagen guardada en assets ✓', 'success');
-    } catch (err) {
-      if (err.name === 'AbortError') return;
-      if (hint) hint.textContent = `Copiá manualmente "${file.name}" a la carpeta assets/ del proyecto.`;
-      showToast('No se pudo guardar la imagen automáticamente', 'error');
-    }
+  addBtn?.addEventListener('click', () => {
+    list.appendChild(createRow());
+    updateRemoveButtons();
   });
+
+  list.querySelectorAll('.image-url-row').forEach(row => {
+    const input = row.querySelector('input');
+    input.addEventListener('input', () => updatePreview(input));
+    const btn = row.querySelector('.btn-remove-url');
+    btn.addEventListener('click', () => {
+      btn.closest('.image-url-row').remove();
+      updateRemoveButtons();
+    });
+    if (input.value.trim()) setTimeout(() => updatePreview(input), 0);
+  });
+
+  updateRemoveButtons();
+}
+
+function getImageUrls() {
+  const inputs = document.querySelectorAll('#image-url-list .image-url-row input');
+  return Array.from(inputs).map(inp => inp.value.trim()).filter(Boolean);
+}
+
+function setImageUrls(urlString) {
+  const list = document.getElementById('image-url-list');
+  if (!list) return;
+  const urls = (urlString || '').split(';').map(s => s.trim()).filter(Boolean);
+  list.innerHTML = '';
+  (urls.length ? urls : ['']).forEach(url => {
+    const row = document.createElement('div');
+    row.className = 'image-url-row';
+    row.innerHTML = `
+      <input class="form-input" type="url" placeholder="https://ejemplo.com/imagen.jpg" value="${url.replace(/"/g, '&quot;')}">
+      <button type="button" class="btn btn-danger btn-sm btn-remove-url" title="Quitar imagen">✕</button>
+    `;
+    const input = row.querySelector('input');
+    input.addEventListener('input', () => {
+      const r = input.closest('.image-url-row');
+      let p = r.querySelector('.image-url-preview');
+      const v = input.value.trim();
+      if (v && (v.startsWith('http://') || v.startsWith('https://') || v.startsWith('data:'))) {
+        if (!p) { p = document.createElement('img'); p.className = 'image-url-preview'; p.onerror = () => { p.style.display = 'none'; }; r.insertBefore(p, r.querySelector('.btn-remove-url')); }
+        p.style.display = ''; p.src = v;
+      } else if (p) { p.style.display = 'none'; }
+    });
+    row.querySelector('.btn-remove-url').addEventListener('click', () => {
+      row.remove();
+      list.querySelectorAll('.btn-remove-url').forEach(b => {
+        b.style.display = list.querySelectorAll('.image-url-row').length > 1 ? '' : 'none';
+      });
+    });
+    list.appendChild(row);
+    if (url) setTimeout(() => input.dispatchEvent(new Event('input')), 0);
+  });
+  list.querySelectorAll('.btn-remove-url').forEach(b => {
+    b.style.display = list.querySelectorAll('.image-url-row').length > 1 ? '' : 'none';
+  });
+}
+
+function resetImageUrls() {
+  setImageUrls('');
 }
 
 // ── Categorías en el select ───────────────────────────────────
@@ -196,14 +275,8 @@ function enterEditMode(product) {
   setValue('ad-color',       (product.color  || '').toLowerCase());
   setValue('ad-stock',       product.stock   || 0);
 
-  // La imagen actual se conserva salvo que se elija un archivo nuevo
-  form.dataset.editImagen = product.ulrImagen || product.imagen || '';
-  const imagenHint = document.getElementById('ad-imagen-hint');
-  if (imagenHint) {
-    imagenHint.textContent = form.dataset.editImagen
-      ? `Imagen actual: ${firstImage(form.dataset.editImagen)}`
-      : '';
-  }
+  // Imágenes: rellenar los inputs con las URLs existentes
+  setImageUrls(product.ulrImagen || product.imagen || '');
 
   // Categoría
   const catSelect = document.getElementById('ad-categoria');
@@ -250,10 +323,7 @@ function setupAdminForm() {
     const color       = document.getElementById('ad-color')?.value;
     const stock       = parseInt(document.getElementById('ad-stock')?.value) || 0;
     const talles      = [...document.querySelectorAll('input[name="talles"]:checked')].map(i => i.value);
-    const imagenFile  = document.getElementById('ad-imagen')?.files?.[0];
-    const imagen      = imagenFile
-      ? `assets/${form.dataset.savedImageName || imagenFile.name}`
-      : (form.dataset.editImagen || '');
+    const imagen      = getImageUrls().join(';');
 
     if (!nombre || isNaN(precio) || precio <= 0 || !genero || !idCategoria || !color) {
       showToast('Completá todos los campos obligatorios', 'error');
@@ -298,6 +368,7 @@ function setupAdminForm() {
 
         showToast('Producto creado correctamente ✓', 'success');
         form.reset();
+        resetImageUrls();
       }
 
       await loadProductsTable();
@@ -319,13 +390,11 @@ function setupAdminForm() {
 function exitEditMode(form) {
   delete form.dataset.editId;
   delete form.dataset.editInventarioId;
-  delete form.dataset.editImagen;
   const title = document.querySelector('.admin-card-title');
   const btn   = form.querySelector('button[type="submit"]');
-  const hint  = document.getElementById('ad-imagen-hint');
   if (title) title.textContent = 'Nuevo producto';
   if (btn)   btn.textContent   = 'Guardar producto';
-  if (hint)  hint.textContent  = '';
+  resetImageUrls();
 }
 
 // ── Búsqueda en tabla ─────────────────────────────────────────

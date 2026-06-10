@@ -6,7 +6,6 @@
 -- Tiempo de generación: 10-06-2025 a las 04:36:36
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.0.25
-USE lanaylino;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -101,7 +100,7 @@ CREATE TABLE `producto` (
   `precio` decimal(10,2) NOT NULL,
   `genero` varchar(20) NOT NULL,
   `id_categoria` int(11) NOT NULL,
-  `imagen` text NOT NULL
+  `imagen` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -260,10 +259,4 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-CREATE TABLE carrito (
-    id_carrito INT AUTO_INCREMENT PRIMARY KEY,
-    id_inventario INT,
-    id_usuario INT,
-    FOREIGN KEY (id_inventario) REFERENCES inventario(id_inventario),
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
-);
+

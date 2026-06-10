@@ -19,6 +19,7 @@
 const IMG_FALLBACK = 'assests/default.png';
 
 function imgFallback(img) {
+  if (img.src !== IMG_FALLBACK) console.warn('Image failed to load:', img.src);
   img.onerror = null;
   img.src = IMG_FALLBACK;
 }
@@ -118,12 +119,7 @@ async function loadDropdownCategories() {
     if (!cats.length) return;
 
     document.querySelectorAll('.dropdown-menu').forEach(menu => {
-      const allLink = menu.querySelector('a:first-child')?.cloneNode(true);
-      const divider  = menu.querySelector('.dropdown-divider')?.cloneNode(true);
       menu.innerHTML = '';
-      if (allLink) menu.appendChild(allLink);
-      if (divider)  menu.appendChild(divider);
-
       cats.forEach(cat => {
         const a = document.createElement('a');
         a.href        = `index.html?categoria=${cat.id_categoria || cat.id}`;
@@ -150,4 +146,5 @@ function setupNavToggle() {
 document.addEventListener('DOMContentLoaded', () => {
   updateHeaderSession();
   setupNavToggle();
+  if (Api.isLoggedIn()) loadDropdownCategories();
 });

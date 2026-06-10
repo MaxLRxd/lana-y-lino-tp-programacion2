@@ -1,0 +1,35 @@
+{
+  "name": "backend-2025-1er-cuatrimestre",
+  "version": "1.0.0",
+  "description": "To make it easy for you to get started with GitLab, here's a list of recommended next steps.",
+  "main": "index.js",
+  "scripts": {
+    "babel-node": "babel-node --presets=@babel/preset-env",
+    "dev": "nodemon --exec npm run babel-node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/franco.friggeri1/backend-2025-1er-cuatrimestre.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/franco.friggeri1/backend-2025-1er-cuatrimestre/issues"
+  },
+  "homepage": "https://gitlab.com/franco.friggeri1/backend-2025-1er-cuatrimestre#readme",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "promise-mysql": "^5.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.27.2",
+    "@babel/core": "^7.27.4",
+    "@babel/node": "^7.27.1",
+    "@babel/preset-env": "^7.27.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.10"
+  }
+}
